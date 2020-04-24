@@ -453,13 +453,15 @@ func GetTexImage(arg0 uint32, arg1 int32, arg2 uint32, arg3 uint32, arg4 unsafe.
 		log.Printf("trace: code=%v", code)
 	}
 }
-func GetUniformLocation(arg0 uint32, arg1 *uint8) {
-	gl.GetUniformLocation(arg0, arg1)
+func GetUniformLocation(arg0 uint32, arg1 *uint8) int32 {
+	ret := gl.GetUniformLocation(arg0, arg1)
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
 		log.Printf("trace: code=%v", code)
 	}
+
+	return ret
 }
 func LinkProgram(arg0 uint32) {
 	gl.LinkProgram(arg0)
