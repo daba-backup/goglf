@@ -108,3 +108,19 @@ func CreateProgram(program_name string, vertex_shader_filename string, fragment_
 
 	return 0
 }
+
+func GetProgramID(program_name string) (uint32, bool) {
+	val, ok := program_ids_map[program_name]
+	return val, ok
+}
+func UseProgram(program_name string) int {
+	val, ok := program_ids_map[program_name]
+	if ok == false {
+		log.Printf("warn: No such program. program_name=%v", program_name)
+		return -1
+	}
+
+	dhwrapper.UseProgram(val)
+
+	return 0
+}
