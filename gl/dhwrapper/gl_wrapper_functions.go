@@ -2,7 +2,6 @@ package dhwrapper
 
 import (
 	"log"
-	"strconv"
 	"unsafe"
 
 	"github.com/go-gl/gl/all-core/gl"
@@ -13,7 +12,7 @@ func ActiveTexture(arg0 uint32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[ActiveTexture] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func AttachShader(arg0 uint32, arg1 uint32) {
@@ -21,7 +20,7 @@ func AttachShader(arg0 uint32, arg1 uint32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[AttachShader] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func BindBuffer(arg0 uint32, arg1 uint32) {
@@ -29,7 +28,7 @@ func BindBuffer(arg0 uint32, arg1 uint32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[BindBuffer] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func BindFramebuffer(arg0 uint32, arg1 uint32) {
@@ -37,7 +36,7 @@ func BindFramebuffer(arg0 uint32, arg1 uint32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[BindFramebuffer] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func BindRenderbuffer(arg0 uint32, arg1 uint32) {
@@ -45,7 +44,7 @@ func BindRenderbuffer(arg0 uint32, arg1 uint32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[BindRenderbuffer] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func BindSampler(arg0 uint32, arg1 uint32) {
@@ -53,7 +52,7 @@ func BindSampler(arg0 uint32, arg1 uint32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[BindSampler] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func BindTexture(arg0 uint32, arg1 uint32) {
@@ -61,7 +60,7 @@ func BindTexture(arg0 uint32, arg1 uint32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[BindTexture] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func BindVertexArray(arg0 uint32) {
@@ -69,7 +68,7 @@ func BindVertexArray(arg0 uint32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[BindVertexArray] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func BlendFunc(arg0 uint32, arg1 uint32) {
@@ -77,7 +76,7 @@ func BlendFunc(arg0 uint32, arg1 uint32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[BlendFunc] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func BufferData(arg0 uint32, arg1 int, arg2 unsafe.Pointer, arg3 uint32) {
@@ -85,7 +84,7 @@ func BufferData(arg0 uint32, arg1 int, arg2 unsafe.Pointer, arg3 uint32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[BufferData] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func CheckFramebufferStatus(arg0 uint32) uint32 {
@@ -93,7 +92,7 @@ func CheckFramebufferStatus(arg0 uint32) uint32 {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[CheckFramebufferStatus] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 
 	return ret
@@ -103,7 +102,7 @@ func Clear(arg0 uint32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[Clear] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func ClearColor(arg0 float32, arg1 float32, arg2 float32, arg3 float32) {
@@ -111,7 +110,7 @@ func ClearColor(arg0 float32, arg1 float32, arg2 float32, arg3 float32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[ClearColor] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func ClearDepth(arg0 float64) {
@@ -119,7 +118,7 @@ func ClearDepth(arg0 float64) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[ClearDepth] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func ClearDepthf(arg0 float32) {
@@ -127,7 +126,7 @@ func ClearDepthf(arg0 float32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[ClearDepthf] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func ClearStencil(arg0 int32) {
@@ -135,7 +134,7 @@ func ClearStencil(arg0 int32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[ClearStencil] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func ColorMask(arg0 bool, arg1 bool, arg2 bool, arg3 bool) {
@@ -143,7 +142,7 @@ func ColorMask(arg0 bool, arg1 bool, arg2 bool, arg3 bool) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[ColorMask] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func CompileShader(arg0 uint32) {
@@ -151,7 +150,7 @@ func CompileShader(arg0 uint32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[CompileShader] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func CopyTexImage2D(arg0 uint32, arg1 int32, arg2 uint32, arg3 int32, arg4 int32, arg5 int32, arg6 int32, arg7 int32) {
@@ -159,7 +158,7 @@ func CopyTexImage2D(arg0 uint32, arg1 int32, arg2 uint32, arg3 int32, arg4 int32
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[CopyTexImage2D] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func CreateProgram() uint32 {
@@ -167,7 +166,7 @@ func CreateProgram() uint32 {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[CreateProgram] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 
 	return ret
@@ -177,7 +176,7 @@ func CreateShader(arg0 uint32) uint32 {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[CreateShader] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 
 	return ret
@@ -187,7 +186,7 @@ func CullFace(arg0 uint32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[CullFace] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func DeleteBuffers(arg0 int32, arg1 *uint32) {
@@ -195,7 +194,7 @@ func DeleteBuffers(arg0 int32, arg1 *uint32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[DeleteBuffers] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func DeleteFramebuffers(arg0 int32, arg1 *uint32) {
@@ -203,7 +202,7 @@ func DeleteFramebuffers(arg0 int32, arg1 *uint32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[DeleteFramebuffers] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func DeleteRenderbuffers(arg0 int32, arg1 *uint32) {
@@ -211,7 +210,7 @@ func DeleteRenderbuffers(arg0 int32, arg1 *uint32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[DeleteRenderbuffers] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func DeleteShader(arg0 uint32) {
@@ -219,7 +218,7 @@ func DeleteShader(arg0 uint32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[DeleteShader] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func DeleteTextures(arg0 int32, arg1 *uint32) {
@@ -227,7 +226,7 @@ func DeleteTextures(arg0 int32, arg1 *uint32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[DeleteTextures] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func DeleteVertexArrays(arg0 int32, arg1 *uint32) {
@@ -235,7 +234,7 @@ func DeleteVertexArrays(arg0 int32, arg1 *uint32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[DeleteVertexArrays] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func DepthFunc(arg0 uint32) {
@@ -243,7 +242,7 @@ func DepthFunc(arg0 uint32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[DepthFunc] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func DepthMask(arg0 bool) {
@@ -251,7 +250,7 @@ func DepthMask(arg0 bool) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[DepthMask] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func Disable(arg0 uint32) {
@@ -259,7 +258,7 @@ func Disable(arg0 uint32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[Disable] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func DisableVertexAttribArray(arg0 uint32) {
@@ -267,7 +266,7 @@ func DisableVertexAttribArray(arg0 uint32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[DisableVertexAttribArray] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func DrawArrays(arg0 uint32, arg1 int32, arg2 int32) {
@@ -275,7 +274,7 @@ func DrawArrays(arg0 uint32, arg1 int32, arg2 int32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[DrawArrays] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func DrawBuffer(arg0 uint32) {
@@ -283,7 +282,7 @@ func DrawBuffer(arg0 uint32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[DrawBuffer] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func DrawBuffers(arg0 int32, arg1 *uint32) {
@@ -291,7 +290,7 @@ func DrawBuffers(arg0 int32, arg1 *uint32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[DrawBuffers] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func DrawElements(arg0 uint32, arg1 int32, arg2 uint32, arg3 unsafe.Pointer) {
@@ -299,7 +298,7 @@ func DrawElements(arg0 uint32, arg1 int32, arg2 uint32, arg3 unsafe.Pointer) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[DrawElements] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func Enable(arg0 uint32) {
@@ -307,7 +306,7 @@ func Enable(arg0 uint32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[Enable] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func EnableVertexAttribArray(arg0 uint32) {
@@ -315,7 +314,7 @@ func EnableVertexAttribArray(arg0 uint32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[EnableVertexAttribArray] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func Flush() {
@@ -323,7 +322,7 @@ func Flush() {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[Flush] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func FramebufferRenderbuffer(arg0 uint32, arg1 uint32, arg2 uint32, arg3 uint32) {
@@ -331,7 +330,7 @@ func FramebufferRenderbuffer(arg0 uint32, arg1 uint32, arg2 uint32, arg3 uint32)
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[FramebufferRenderbuffer] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func FramebufferTexture(arg0 uint32, arg1 uint32, arg2 uint32, arg3 int32) {
@@ -339,7 +338,7 @@ func FramebufferTexture(arg0 uint32, arg1 uint32, arg2 uint32, arg3 int32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[FramebufferTexture] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func FramebufferTexture2D(arg0 uint32, arg1 uint32, arg2 uint32, arg3 uint32, arg4 int32) {
@@ -347,7 +346,7 @@ func FramebufferTexture2D(arg0 uint32, arg1 uint32, arg2 uint32, arg3 uint32, ar
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[FramebufferTexture2D] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func GenBuffers(arg0 int32, arg1 *uint32) {
@@ -355,7 +354,7 @@ func GenBuffers(arg0 int32, arg1 *uint32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[GenBuffers] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func GenerateMipmap(arg0 uint32) {
@@ -363,7 +362,7 @@ func GenerateMipmap(arg0 uint32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[GenerateMipmap] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func GenFramebuffers(arg0 int32, arg1 *uint32) {
@@ -371,7 +370,7 @@ func GenFramebuffers(arg0 int32, arg1 *uint32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[GenFramebuffers] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func GenRenderbuffers(arg0 int32, arg1 *uint32) {
@@ -379,7 +378,7 @@ func GenRenderbuffers(arg0 int32, arg1 *uint32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[GenRenderbuffers] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func GenSamplers(arg0 int32, arg1 *uint32) {
@@ -387,7 +386,7 @@ func GenSamplers(arg0 int32, arg1 *uint32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[GenSamplers] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func GenTextures(arg0 int32, arg1 *uint32) {
@@ -395,7 +394,7 @@ func GenTextures(arg0 int32, arg1 *uint32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[GenTextures] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func GenVertexArrays(arg0 int32, arg1 *uint32) {
@@ -403,7 +402,7 @@ func GenVertexArrays(arg0 int32, arg1 *uint32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[GenVertexArrays] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func GetIntegerv(arg0 uint32, arg1 *int32) {
@@ -411,7 +410,7 @@ func GetIntegerv(arg0 uint32, arg1 *int32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[GetIntegerv] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func GetProgramInfoLog(arg0 uint32, arg1 int32, arg2 *int32, arg3 *uint8) {
@@ -419,7 +418,7 @@ func GetProgramInfoLog(arg0 uint32, arg1 int32, arg2 *int32, arg3 *uint8) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[GetProgramInfoLog] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func GetProgramiv(arg0 uint32, arg1 uint32, arg2 *int32) {
@@ -427,7 +426,7 @@ func GetProgramiv(arg0 uint32, arg1 uint32, arg2 *int32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[GetProgramiv] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func GetShaderInfoLog(arg0 uint32, arg1 int32, arg2 *int32, arg3 *uint8) {
@@ -435,7 +434,7 @@ func GetShaderInfoLog(arg0 uint32, arg1 int32, arg2 *int32, arg3 *uint8) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[GetShaderInfoLog] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func GetShaderiv(arg0 uint32, arg1 uint32, arg2 *int32) {
@@ -443,7 +442,7 @@ func GetShaderiv(arg0 uint32, arg1 uint32, arg2 *int32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[GetShaderiv] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func GetTexImage(arg0 uint32, arg1 int32, arg2 uint32, arg3 uint32, arg4 unsafe.Pointer) {
@@ -451,7 +450,7 @@ func GetTexImage(arg0 uint32, arg1 int32, arg2 uint32, arg3 uint32, arg4 unsafe.
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[GetTexImage] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func GetUniformLocation(arg0 uint32, arg1 *uint8) {
@@ -459,7 +458,7 @@ func GetUniformLocation(arg0 uint32, arg1 *uint8) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[GetUniformLocation] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func LinkProgram(arg0 uint32) {
@@ -467,7 +466,7 @@ func LinkProgram(arg0 uint32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[LinkProgram] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func MapBuffer(arg0 uint32, arg1 uint32) unsafe.Pointer {
@@ -475,7 +474,7 @@ func MapBuffer(arg0 uint32, arg1 uint32) unsafe.Pointer {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[MapBuffer] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 
 	return ret
@@ -485,7 +484,7 @@ func ReadBuffer(arg0 uint32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[ReadBuffer] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func ReadPixels(arg0 int32, arg1 int32, arg2 int32, arg3 int32, arg4 uint32, arg5 uint32, arg6 unsafe.Pointer) {
@@ -493,7 +492,7 @@ func ReadPixels(arg0 int32, arg1 int32, arg2 int32, arg3 int32, arg4 uint32, arg
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[ReadPixels] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func RenderbufferStorage(arg0 uint32, arg1 uint32, arg2 int32, arg3 int32) {
@@ -501,7 +500,7 @@ func RenderbufferStorage(arg0 uint32, arg1 uint32, arg2 int32, arg3 int32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[RenderbufferStorage] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func SamplerParameteri(arg0 uint32, arg1 uint32, arg2 int32) {
@@ -509,7 +508,7 @@ func SamplerParameteri(arg0 uint32, arg1 uint32, arg2 int32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[SamplerParameteri] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func ShaderSource(arg0 uint32, arg1 int32, arg2 **uint8, arg3 *int32) {
@@ -517,7 +516,7 @@ func ShaderSource(arg0 uint32, arg1 int32, arg2 **uint8, arg3 *int32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[ShaderSource] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func StencilFunc(arg0 uint32, arg1 int32, arg2 uint32) {
@@ -525,7 +524,7 @@ func StencilFunc(arg0 uint32, arg1 int32, arg2 uint32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[StencilFunc] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func StencilOp(arg0 uint32, arg1 uint32, arg2 uint32) {
@@ -533,7 +532,7 @@ func StencilOp(arg0 uint32, arg1 uint32, arg2 uint32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[StencilOp] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func TexImage2D(arg0 uint32, arg1 int32, arg2 int32, arg3 int32, arg4 int32, arg5 int32, arg6 uint32, arg7 uint32, arg8 unsafe.Pointer) {
@@ -541,7 +540,7 @@ func TexImage2D(arg0 uint32, arg1 int32, arg2 int32, arg3 int32, arg4 int32, arg
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[TexImage2D] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func TexParameterf(arg0 uint32, arg1 uint32, arg2 float32) {
@@ -549,7 +548,7 @@ func TexParameterf(arg0 uint32, arg1 uint32, arg2 float32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[TexParameterf] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func TexParameterfv(arg0 uint32, arg1 uint32, arg2 *float32) {
@@ -557,7 +556,7 @@ func TexParameterfv(arg0 uint32, arg1 uint32, arg2 *float32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[TexParameterfv] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func TexParameteri(arg0 uint32, arg1 uint32, arg2 int32) {
@@ -565,7 +564,7 @@ func TexParameteri(arg0 uint32, arg1 uint32, arg2 int32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[TexParameteri] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func Uniform1f(arg0 int32, arg1 float32) {
@@ -573,7 +572,7 @@ func Uniform1f(arg0 int32, arg1 float32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[Uniform1f] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func Uniform1fv(arg0 int32, arg1 int32, arg2 *float32) {
@@ -581,7 +580,7 @@ func Uniform1fv(arg0 int32, arg1 int32, arg2 *float32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[Uniform1fv] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func Uniform1i(arg0 int32, arg1 int32) {
@@ -589,7 +588,7 @@ func Uniform1i(arg0 int32, arg1 int32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[Uniform1i] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func Uniform1iv(arg0 int32, arg1 int32, arg2 *int32) {
@@ -597,7 +596,7 @@ func Uniform1iv(arg0 int32, arg1 int32, arg2 *int32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[Uniform1iv] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func Uniform2f(arg0 int32, arg1 float32, arg2 float32) {
@@ -605,7 +604,7 @@ func Uniform2f(arg0 int32, arg1 float32, arg2 float32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[Uniform2f] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func Uniform2fv(arg0 int32, arg1 int32, arg2 *float32) {
@@ -613,7 +612,7 @@ func Uniform2fv(arg0 int32, arg1 int32, arg2 *float32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[Uniform2fv] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func Uniform2i(arg0 int32, arg1 int32, arg2 int32) {
@@ -621,7 +620,7 @@ func Uniform2i(arg0 int32, arg1 int32, arg2 int32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[Uniform2i] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func Uniform2iv(arg0 int32, arg1 int32, arg2 *int32) {
@@ -629,7 +628,7 @@ func Uniform2iv(arg0 int32, arg1 int32, arg2 *int32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[Uniform2iv] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func Uniform3f(arg0 int32, arg1 float32, arg2 float32, arg3 float32) {
@@ -637,7 +636,7 @@ func Uniform3f(arg0 int32, arg1 float32, arg2 float32, arg3 float32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[Uniform3f] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func Uniform3fv(arg0 int32, arg1 int32, arg2 *float32) {
@@ -645,7 +644,7 @@ func Uniform3fv(arg0 int32, arg1 int32, arg2 *float32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[Uniform3fv] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func Uniform3i(arg0 int32, arg1 int32, arg2 int32, arg3 int32) {
@@ -653,7 +652,7 @@ func Uniform3i(arg0 int32, arg1 int32, arg2 int32, arg3 int32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[Uniform3i] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func Uniform3iv(arg0 int32, arg1 int32, arg2 *int32) {
@@ -661,7 +660,7 @@ func Uniform3iv(arg0 int32, arg1 int32, arg2 *int32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[Uniform3iv] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func Uniform4f(arg0 int32, arg1 float32, arg2 float32, arg3 float32, arg4 float32) {
@@ -669,7 +668,7 @@ func Uniform4f(arg0 int32, arg1 float32, arg2 float32, arg3 float32, arg4 float3
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[Uniform4f] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func Uniform4fv(arg0 int32, arg1 int32, arg2 *float32) {
@@ -677,7 +676,7 @@ func Uniform4fv(arg0 int32, arg1 int32, arg2 *float32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[Uniform4fv] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func Uniform4i(arg0 int32, arg1 int32, arg2 int32, arg3 int32, arg4 int32) {
@@ -685,7 +684,7 @@ func Uniform4i(arg0 int32, arg1 int32, arg2 int32, arg3 int32, arg4 int32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[Uniform4i] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func Uniform4iv(arg0 int32, arg1 int32, arg2 *int32) {
@@ -693,7 +692,7 @@ func Uniform4iv(arg0 int32, arg1 int32, arg2 *int32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[Uniform4iv] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func UniformMatrix2fv(arg0 int32, arg1 int32, arg2 bool, arg3 *float32) {
@@ -701,7 +700,7 @@ func UniformMatrix2fv(arg0 int32, arg1 int32, arg2 bool, arg3 *float32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[UniformMatrix2fv] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func UniformMatrix3fv(arg0 int32, arg1 int32, arg2 bool, arg3 *float32) {
@@ -709,7 +708,7 @@ func UniformMatrix3fv(arg0 int32, arg1 int32, arg2 bool, arg3 *float32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[UniformMatrix3fv] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func UniformMatrix4fv(arg0 int32, arg1 int32, arg2 bool, arg3 *float32) {
@@ -717,7 +716,7 @@ func UniformMatrix4fv(arg0 int32, arg1 int32, arg2 bool, arg3 *float32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[UniformMatrix4fv] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func UnmapBuffer(arg0 uint32) bool {
@@ -725,7 +724,7 @@ func UnmapBuffer(arg0 uint32) bool {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[UnmapBuffer] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 
 	return ret
@@ -735,7 +734,7 @@ func UseProgram(arg0 uint32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[UseProgram] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func VertexAttribPointer(arg0 uint32, arg1 int32, arg2 uint32, arg3 bool, arg4 int32, arg5 unsafe.Pointer) {
@@ -743,7 +742,7 @@ func VertexAttribPointer(arg0 uint32, arg1 int32, arg2 uint32, arg3 bool, arg4 i
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[VertexAttribPointer] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
 func Viewport(arg0 int32, arg1 int32, arg2 int32, arg3 int32) {
@@ -751,6 +750,6 @@ func Viewport(arg0 int32, arg1 int32, arg2 int32, arg3 int32) {
 
 	code := gl.GetError()
 	if code != gl.NO_ERROR {
-		log.Printf("trace:[Viewport] code:" + strconv.Itoa(int(code)))
+		log.Printf("trace:code:%d", code)
 	}
 }
