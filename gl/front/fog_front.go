@@ -12,10 +12,10 @@ func init() {
 	f = fog.NewFog()
 }
 
-func AddProgram(program *shader.ShaderProgram) {
+func AddProgramToFog(program *shader.ShaderProgram) {
 	f.AddProgram(program)
 }
-func RemoveAllPrograms() {
+func RemoveAllProgramsFromFog() {
 	f.RemoveAllPrograms()
 }
 
@@ -26,6 +26,6 @@ func SetFogStartEnd(start float32, end float32) {
 	f.SetFogStartEnd(start, end)
 }
 
-func Update() {
+func UpdateFog() {
 	f.Update()
 }

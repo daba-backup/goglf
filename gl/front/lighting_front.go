@@ -13,10 +13,10 @@ func init() {
 	l = lighting.NewLighting()
 }
 
-func AddProgram(program *shader.ShaderProgram) {
+func AddProgramToLighting(program *shader.ShaderProgram) {
 	l.AddProgram(program)
 }
-func RemoveAllPrograms() {
+func RemoveAllProgramsFromLighting() {
 	l.RemoveAllPrograms()
 }
 
@@ -36,6 +36,6 @@ func SetSpecularPower(specular_power float32) {
 	l.SetSpecularPower(specular_power)
 }
 
-func Update() {
+func UpdateLighting() {
 	l.Update()
 }

@@ -23,10 +23,10 @@ func init() {
 	window_height = window.DEFAULT_HEIGHT
 }
 
-func AddProgram(program *shader.ShaderProgram) {
+func AddProgramToCamera(program *shader.ShaderProgram) {
 	c.AddProgram(program)
 }
-func RemoveAllPrograms() {
+func RemoveAllProgramsFromCamera() {
 	c.RemoveAllPrograms()
 }
 
@@ -125,6 +125,6 @@ func UpdateAspect(width int, height int) {
 	window_width = width
 	window_height = height
 }
-func Update() {
+func UpdateCamera() {
 	c.Update()
 }
