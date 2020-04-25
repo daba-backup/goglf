@@ -28,6 +28,7 @@ type Camera struct {
 
 	projection_matrix          matrix.Matrix
 	view_transformation_matrix matrix.Matrix
+	matrix_set_flag            bool
 
 	programs []*shader.ShaderProgram
 }
@@ -47,6 +48,8 @@ func NewCamera() *Camera {
 	camera.position = vector.VGet(-50.0, 50.0, -50.0)
 	camera.target = vector.VGet(0.0, 0.0, 0.0)
 	camera.up = vector.VGet(0.0, 1.0, 0.0)
+
+	camera.matrix_set_flag = false
 
 	camera.programs = make([]*shader.ShaderProgram, 0)
 
@@ -102,6 +105,7 @@ func (c *Camera) SetupCamera_Ortho(size float32) {
 
 func (c *Camera) SetCameraViewMatrix(m matrix.Matrix) {
 	c.view_transformation_matrix = m
+	c.matrix_set_flag = true
 }
 
 func (c *Camera) GetProjectionMatrix() matrix.Matrix {
@@ -128,7 +132,7 @@ func (c *Camera) Update() {
 		c.projection_matrix = matrixtool.GetPerspectiveMatrix_FovAndAspect(c.fov, c.aspect, c.near, c.far)
 	}
 
-	if c.view_transformation_matrix == nil {
+	if c.matrix_set_flag == false {
 		c.view_transformation_matrix = matrixtool.GetViewTransformationMatrix(c.position, c.target, c.up)
 	}
 
@@ -138,10 +142,10 @@ func (c *Camera) Update() {
 		program.SetUniformVector("camera_target", c.target)
 		program.SetUniformMatrix("projection", true, c.projection_matrix)
 		program.SetUniformMatrix("view_transformation", true, c.view_transformation_matrix)
-		program.SetUniform1f("near", true, c.near)
-		program.SetUniform1f("far", true, c.far)
+		program.SetUniform1f("near", c.near)
+		program.SetUniform1f("far", c.far)
 		program.Disable()
 	}
 
-	c.view_transformation_matrix = nil
+	c.matrix_set_flag = false
 }
