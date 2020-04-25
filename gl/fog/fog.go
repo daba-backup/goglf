@@ -21,6 +21,8 @@ func NewFog() *Fog {
 	fog.color = coloru8.GetColorU8FromFloat32Components(0.0, 0.0, 0.0, 1.0)
 
 	fog.programs = make([]*shader.ShaderProgram, 0)
+
+	return fog
 }
 
 func (f *Fog) AddProgram(program *shader.ShaderProgram) {

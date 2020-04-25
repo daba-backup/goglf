@@ -4,9 +4,9 @@ import (
 	"github.com/dabasan/go-dh3dbasis/matrix"
 	"github.com/dabasan/go-dh3dbasis/vector"
 	"github.com/dabasan/go-dhtool/math"
+	"github.com/dabasan/goglf/gl/common"
 	"github.com/dabasan/goglf/gl/matrixtool"
 	"github.com/dabasan/goglf/gl/shader"
-	"github.com/dabasan/goglf/gl/window"
 )
 
 const PERSPECTIVE = iota
@@ -43,7 +43,7 @@ func NewCamera() *Camera {
 	camera.fov = math.DegToRad(60.0)
 	camera.size = 10.0
 
-	camera.aspect = window.DEFAULT_WIDTH / window.DEFAULT_HEIGHT
+	camera.aspect = common.WINDOW_DEFAULT_WIDTH / common.WINDOW_DEFAULT_HEIGHT
 
 	camera.position = vector.VGet(-50.0, 50.0, -50.0)
 	camera.target = vector.VGet(0.0, 0.0, 0.0)

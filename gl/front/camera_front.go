@@ -3,12 +3,11 @@ package front
 import (
 	"math"
 
-	"github.com/dabasan/goglf/gl/window"
-
 	"github.com/dabasan/go-dh3dbasis/matrix"
 	"github.com/dabasan/go-dh3dbasis/vector"
 	dhmath "github.com/dabasan/go-dhtool/math"
 	"github.com/dabasan/goglf/gl/camera"
+	"github.com/dabasan/goglf/gl/common"
 	"github.com/dabasan/goglf/gl/coordinatetool"
 	"github.com/dabasan/goglf/gl/shader"
 )
@@ -19,8 +18,8 @@ var window_height int
 
 func init() {
 	c = camera.NewCamera()
-	window_width = window.DEFAULT_WIDTH
-	window_height = window.DEFAULT_HEIGHT
+	window_width = common.WINDOW_DEFAULT_WIDTH
+	window_height = common.WINDOW_DEFAULT_HEIGHT
 }
 
 func AddProgramToCamera(program *shader.ShaderProgram) {

@@ -47,5 +47,13 @@ func setDefaultProperties() {
 	log.Printf("info: Default properties set.")
 }
 func addProgramsToFront() {
+	texture, _ := shader.NewShaderProgram("texture")
+	color, _ := shader.NewShaderProgram("color")
 
+	AddProgramToCamera(texture)
+	AddProgramToCamera(color)
+
+	AddProgramToFog(texture)
+
+	AddProgramToLighting(texture)
 }
