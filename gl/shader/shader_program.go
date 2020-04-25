@@ -31,10 +31,10 @@ func NewShaderProgram(program_name string) (*ShaderProgram, error) {
 	return program, nil
 }
 
-func (p *ShaderProgram) EnableProgram() {
+func (p *ShaderProgram) Enable() {
 	wrapper.UseProgram(p.program_id)
 }
-func (p *ShaderProgram) DisableProgram() {
+func (p *ShaderProgram) Disable() {
 	wrapper.UseProgram(0)
 }
 
