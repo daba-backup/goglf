@@ -1,4 +1,4 @@
-package dhwrapper
+package wrapper
 
 import (
 	"log"

@@ -1,4 +1,4 @@
-package dhcoordinatetool
+package coordinatetool
 
 func NormalizeCoordinate_Int(value int, max int) float32 {
 	return 2.0*float32(value)/float32(max) - 1.0
