@@ -34,8 +34,8 @@ func CreateProgram(program_name string, vertex_shader_filename string, fragment_
 		return -1
 	}
 
-	vertex_shader_srcs, v_free_fn := gl.Strs(vertex_shader_code)
-	fragment_shader_srcs, f_free_fn := gl.Strs(fragment_shader_code)
+	vertex_shader_srcs, v_free_fn := gl.Strs(vertex_shader_code + "\x00")
+	fragment_shader_srcs, f_free_fn := gl.Strs(fragment_shader_code + "\x00")
 	defer v_free_fn()
 	defer f_free_fn()
 

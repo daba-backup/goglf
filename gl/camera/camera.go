@@ -142,8 +142,8 @@ func (c *Camera) Update() {
 		program.SetUniformVector("camera_target", c.target)
 		program.SetUniformMatrix("projection", true, c.projection_matrix)
 		program.SetUniformMatrix("view_transformation", true, c.view_transformation_matrix)
-		program.SetUniform1f("near", c.near)
-		program.SetUniform1f("far", c.far)
+		program.SetUniform1f("camera_near", c.near)
+		program.SetUniform1f("camera_far", c.far)
 		program.Disable()
 	}
 
