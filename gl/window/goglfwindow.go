@@ -5,7 +5,6 @@ import (
 
 	"github.com/dabasan/go-dh3dbasis/coloru8"
 	"github.com/dabasan/go-dh3dbasis/vector"
-	"github.com/dabasan/goglf/gl/draw"
 	"github.com/dabasan/goglf/gl/wrapper"
 	"github.com/go-gl/gl/all-core/gl"
 	"github.com/go-gl/glfw/v3.3/glfw"
@@ -27,7 +26,6 @@ type mouseButtonCountsAndFlags struct {
 type ReshapeFunc func(gw *GOGLFWindow, width int, height int)
 type UpdateFunc func(gw *GOGLFWindow)
 type DrawFunc func(gw *GOGLFWindow)
-type OnWindowClosingFunc func(gw *GOGLFWindow)
 
 type GOGLFWindow struct {
 	window *glfw.Window
@@ -41,6 +39,8 @@ type GOGLFWindow struct {
 	on_window_closing_func OnWindowClosingFunc
 
 	background_color coloru8.ColorU8
+
+	user_data *interface{}
 }
 
 func NewGOGLFWindow(width int, height int, title string) (*GOGLFWindow, error) {
@@ -157,7 +157,7 @@ func Update(gw *GOGLFWindow) {
 		vector.VGet(50.0, 50.0, 50.0), vector.VGet(0.0, 0.0, 0.0))
 }
 func Draw(gw *GOGLFWindow) {
-	draw.DrawAxes(100.0)
+
 }
 func OnWindowClosing(gw *GOGLFWindow) {
 
@@ -170,6 +170,27 @@ func (gw *GOGLFWindow) ShouldClose() bool {
 func (gw *GOGLFWindow) InLoop() {
 	gw.display()
 	gw.window.SwapBuffers()
+}
+
+func (gw *GOGLFWindow) SetUserData(d *interface{}) {
+	gw.user_data = d
+}
+func (gw *GOGLFWindow) GetUserData() *interface{} {
+	return gw.user_data
+}
+
+func (gw *GOGLFWindow) GetWindow() *glfw.Window {
+	return gw.window
+}
+
+func (gw *GOGLFWindow) SetReshapeFunc(f ReshapeFunc) {
+	gw.reshape_func = f
+}
+func (gw *GOGLFWindow) SetUpdateFunc(f UpdateFunc) {
+	gw.update_func = f
+}
+func (gw *GOGLFWindow) SetDrawFunc(f DrawFunc) {
+	gw.draw_func = f
 }
 
 func (gw *GOGLFWindow) GetKeyPressingCount(k glfw.Key) int {
