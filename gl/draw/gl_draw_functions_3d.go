@@ -42,10 +42,10 @@ func DrawLine3D(
 
 	wrapper.BindBuffer(gl.ARRAY_BUFFER, pos_vbo)
 	wrapper.BufferData(gl.ARRAY_BUFFER,
-		unsafe.Sizeof(float32)*len(pos_buffer), &pos_buffer, gl.STATIC_DRAW)
+		wrapper.SIZEOF_FLOAT*len(pos_buffer), unsafe.Pointer(&pos_buffer[0]), gl.STATIC_DRAW)
 	wrapper.BindBuffer(gl.ARRAY_BUFFER, color_vbo)
 	wrapper.BufferData(gl.ARRAY_BUFFER,
-		unsafe.Sizeof(float32)*len(color_buffer), &color_buffer, gl.STATIC_DRAW)
+		wrapper.SIZEOF_FLOAT*len(color_buffer), unsafe.Pointer(&color_buffer[0]), gl.STATIC_DRAW)
 
 	wrapper.GenVertexArrays(1, &vao)
 	wrapper.BindVertexArray(vao)
@@ -53,12 +53,12 @@ func DrawLine3D(
 	//Position attribute
 	wrapper.BindBuffer(gl.ARRAY_BUFFER, pos_vbo)
 	wrapper.EnableVertexAttribArray(0)
-	wrapper.VertexAttribPointer(0, 3, gl.FLOAT, false, unsafe.Sizeof(float32)*3, 0)
+	wrapper.VertexAttribPointer(0, 3, gl.FLOAT, false, wrapper.SIZEOF_FLOAT*3, nil)
 
 	//Color attribute
 	wrapper.BindBuffer(gl.ARRAY_BUFFER, color_vbo)
 	wrapper.EnableVertexAttribArray(1)
-	wrapper.VertexAttribPointer(1, 4, gl.FLOAT, false, unsafe.Sizeof(float32)*4, 0)
+	wrapper.VertexAttribPointer(1, 4, gl.FLOAT, false, wrapper.SIZEOF_FLOAT*4, nil)
 
 	wrapper.BindBuffer(gl.ARRAY_BUFFER, 0)
 	wrapper.BindVertexArray(0)
@@ -82,42 +82,42 @@ func DrawLine3D_SingleColor(line_pos_1 vector.Vector, line_pos_2 vector.Vector, 
 func DrawAxes(length float32) {
 	DrawLine3D_SingleColor(
 		vector.VGet(-length, 0.0, 0.0),
-		vector.Vector(length, 0.0, 0.0),
+		vector.VGet(length, 0.0, 0.0),
 		coloru8.GetColorU8FromFloat32Components(1.0, 0.0, 0.0, 1.0))
 	DrawLine3D_SingleColor(
 		vector.VGet(0.0, -length, 0.0),
-		vector.Vector(0.0, length, 0.0),
+		vector.VGet(0.0, length, 0.0),
 		coloru8.GetColorU8FromFloat32Components(0.0, 1.0, 0.0, 1.0))
 	DrawLine3D_SingleColor(
 		vector.VGet(0.0, 0.0, -length),
-		vector.Vector(0.0, 0.0, length),
+		vector.VGet(0.0, 0.0, length),
 		coloru8.GetColorU8FromFloat32Components(0.0, 0.0, 1.0, 1.0))
 }
 func DrawAxes_Positive(length float32) {
 	DrawLine3D_SingleColor(
 		vector.VGet(0.0, 0.0, 0.0),
-		vector.Vector(length, 0.0, 0.0),
+		vector.VGet(length, 0.0, 0.0),
 		coloru8.GetColorU8FromFloat32Components(1.0, 0.0, 0.0, 1.0))
 	DrawLine3D_SingleColor(
 		vector.VGet(0.0, 0.0, 0.0),
-		vector.Vector(0.0, length, 0.0),
+		vector.VGet(0.0, length, 0.0),
 		coloru8.GetColorU8FromFloat32Components(0.0, 1.0, 0.0, 1.0))
 	DrawLine3D_SingleColor(
 		vector.VGet(0.0, 0.0, 0.0),
-		vector.Vector(0.0, 0.0, length),
+		vector.VGet(0.0, 0.0, length),
 		coloru8.GetColorU8FromFloat32Components(0.0, 0.0, 1.0, 1.0))
 }
 func DrawAxes_Negative(length float32) {
 	DrawLine3D_SingleColor(
 		vector.VGet(-length, 0.0, 0.0),
-		vector.Vector(0.0, 0.0, 0.0),
+		vector.VGet(0.0, 0.0, 0.0),
 		coloru8.GetColorU8FromFloat32Components(1.0, 0.0, 0.0, 1.0))
 	DrawLine3D_SingleColor(
 		vector.VGet(0.0, -length, 0.0),
-		vector.Vector(0.0, 0.0, 0.0),
+		vector.VGet(0.0, 0.0, 0.0),
 		coloru8.GetColorU8FromFloat32Components(0.0, 1.0, 0.0, 1.0))
 	DrawLine3D_SingleColor(
 		vector.VGet(0.0, 0.0, -length),
-		vector.Vector(0.0, 0.0, 0.0),
+		vector.VGet(0.0, 0.0, 0.0),
 		coloru8.GetColorU8FromFloat32Components(0.0, 0.0, 1.0, 1.0))
 }
