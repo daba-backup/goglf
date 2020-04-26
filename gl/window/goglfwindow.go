@@ -23,6 +23,23 @@ type mouseButtonCountsAndFlags struct {
 	pressing_flags   map[glfw.MouseButton]bool
 }
 
+func newKeyCountsAndFlags() *keyCountsAndFlags {
+	ret := new(keyCountsAndFlags)
+	ret.pressing_counts = make(map[glfw.Key]int)
+	ret.releasing_counts = make(map[glfw.Key]int)
+	ret.pressing_flags = make(map[glfw.Key]bool)
+
+	return ret
+}
+func newMouseButtonCountsAndFlags() *mouseButtonCountsAndFlags {
+	ret := new(mouseButtonCountsAndFlags)
+	ret.pressing_counts = make(map[glfw.MouseButton]int)
+	ret.releasing_counts = make(map[glfw.MouseButton]int)
+	ret.pressing_flags = make(map[glfw.MouseButton]bool)
+
+	return ret
+}
+
 type ReshapeFunc func(gw *GOGLFWindow, width int, height int)
 type UpdateFunc func(gw *GOGLFWindow)
 type DrawFunc func(gw *GOGLFWindow)
@@ -30,8 +47,8 @@ type DrawFunc func(gw *GOGLFWindow)
 type GOGLFWindow struct {
 	window *glfw.Window
 
-	key_caf          keyCountsAndFlags
-	mouse_button_caf mouseButtonCountsAndFlags
+	key_caf          *keyCountsAndFlags
+	mouse_button_caf *mouseButtonCountsAndFlags
 
 	reshape_func ReshapeFunc
 	update_func  UpdateFunc
@@ -57,6 +74,9 @@ func NewGOGLFWindow(width int, height int, title string) (*GOGLFWindow, error) {
 	log.Printf("info: OpenGL version=%v", gl.GoStr(gl.GetString(gl.VERSION)))
 
 	front.Initialize()
+
+	gw.key_caf = newKeyCountsAndFlags()
+	gw.mouse_button_caf = newMouseButtonCountsAndFlags()
 
 	window.SetKeyCallback(gw.keyCallback)
 	window.SetMouseButtonCallback(gw.mouseButtonCallback)
