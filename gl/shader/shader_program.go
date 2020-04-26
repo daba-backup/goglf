@@ -13,8 +13,9 @@ import (
 )
 
 type ShaderProgram struct {
-	program_name string
-	program_id   uint32
+	program_name     string
+	program_id       uint32
+	log_enabled_flag bool
 }
 
 func NewShaderProgram(program_name string) (*ShaderProgram, error) {
@@ -27,8 +28,13 @@ func NewShaderProgram(program_name string) (*ShaderProgram, error) {
 	program := new(ShaderProgram)
 	program.program_name = program_name
 	program.program_id = program_id
+	program.log_enabled_flag = false
 
 	return program, nil
+}
+
+func (p *ShaderProgram) SetLogEnabledFlag(flag bool) {
+	p.log_enabled_flag = flag
 }
 
 func (p *ShaderProgram) Enable() {
@@ -41,7 +47,9 @@ func (p *ShaderProgram) Disable() {
 func (p *ShaderProgram) SetUniform1i(name string, value int32) int {
 	location := wrapper.GetUniformLocation(p.program_id, gl.Str(name+"\x00"))
 	if location < 0 {
-		log.Printf("debug: (%v) Invalid uniform name. name=%v", p.program_name, name)
+		if p.log_enabled_flag == true {
+			log.Printf("debug: (%v) Invalid uniform name. name=%v", p.program_name, name)
+		}
 		return -1
 	}
 
@@ -52,7 +60,9 @@ func (p *ShaderProgram) SetUniform1i(name string, value int32) int {
 func (p *ShaderProgram) SetUniform2i(name string, value0 int32, value1 int32) int {
 	location := wrapper.GetUniformLocation(p.program_id, gl.Str(name+"\x00"))
 	if location < 0 {
-		log.Printf("debug: (%v) Invalid uniform name. name=%v", p.program_name, name)
+		if p.log_enabled_flag == true {
+			log.Printf("debug: (%v) Invalid uniform name. name=%v", p.program_name, name)
+		}
 		return -1
 	}
 
@@ -63,7 +73,9 @@ func (p *ShaderProgram) SetUniform2i(name string, value0 int32, value1 int32) in
 func (p *ShaderProgram) SetUniform3i(name string, value0 int32, value1 int32, value2 int32) int {
 	location := wrapper.GetUniformLocation(p.program_id, gl.Str(name+"\x00"))
 	if location < 0 {
-		log.Printf("debug: (%v) Invalid uniform name. name=%v", p.program_name, name)
+		if p.log_enabled_flag == true {
+			log.Printf("debug: (%v) Invalid uniform name. name=%v", p.program_name, name)
+		}
 		return -1
 	}
 
@@ -74,7 +86,9 @@ func (p *ShaderProgram) SetUniform3i(name string, value0 int32, value1 int32, va
 func (p *ShaderProgram) SetUniform4i(name string, value0 int32, value1 int32, value2 int32, value3 int32) int {
 	location := wrapper.GetUniformLocation(p.program_id, gl.Str(name+"\x00"))
 	if location < 0 {
-		log.Printf("debug: (%v) Invalid uniform name. name=%v", p.program_name, name)
+		if p.log_enabled_flag == true {
+			log.Printf("debug: (%v) Invalid uniform name. name=%v", p.program_name, name)
+		}
 		return -1
 	}
 
@@ -85,7 +99,9 @@ func (p *ShaderProgram) SetUniform4i(name string, value0 int32, value1 int32, va
 func (p *ShaderProgram) SetUniform1f(name string, value float32) int {
 	location := wrapper.GetUniformLocation(p.program_id, gl.Str(name+"\x00"))
 	if location < 0 {
-		log.Printf("debug: (%v) Invalid uniform name. name=%v", p.program_name, name)
+		if p.log_enabled_flag == true {
+			log.Printf("debug: (%v) Invalid uniform name. name=%v", p.program_name, name)
+		}
 		return -1
 	}
 
@@ -96,7 +112,9 @@ func (p *ShaderProgram) SetUniform1f(name string, value float32) int {
 func (p *ShaderProgram) SetUniform2f(name string, value0 float32, value1 float32) int {
 	location := wrapper.GetUniformLocation(p.program_id, gl.Str(name+"\x00"))
 	if location < 0 {
-		log.Printf("debug: (%v) Invalid uniform name. name=%v", p.program_name, name)
+		if p.log_enabled_flag == true {
+			log.Printf("debug: (%v) Invalid uniform name. name=%v", p.program_name, name)
+		}
 		return -1
 	}
 
@@ -107,7 +125,9 @@ func (p *ShaderProgram) SetUniform2f(name string, value0 float32, value1 float32
 func (p *ShaderProgram) SetUniform3f(name string, value0 float32, value1 float32, value2 float32) int {
 	location := wrapper.GetUniformLocation(p.program_id, gl.Str(name+"\x00"))
 	if location < 0 {
-		log.Printf("debug: (%v) Invalid uniform name. name=%v", p.program_name, name)
+		if p.log_enabled_flag == true {
+			log.Printf("debug: (%v) Invalid uniform name. name=%v", p.program_name, name)
+		}
 		return -1
 	}
 
@@ -118,7 +138,9 @@ func (p *ShaderProgram) SetUniform3f(name string, value0 float32, value1 float32
 func (p *ShaderProgram) SetUniform4f(name string, value0 float32, value1 float32, value2 float32, value3 float32) int {
 	location := wrapper.GetUniformLocation(p.program_id, gl.Str(name+"\x00"))
 	if location < 0 {
-		log.Printf("debug: (%v) Invalid uniform name. name=%v", p.program_name, name)
+		if p.log_enabled_flag == true {
+			log.Printf("debug: (%v) Invalid uniform name. name=%v", p.program_name, name)
+		}
 		return -1
 	}
 
@@ -129,7 +151,9 @@ func (p *ShaderProgram) SetUniform4f(name string, value0 float32, value1 float32
 func (p *ShaderProgram) SetUniformVector(name string, value vector.Vector) int {
 	location := wrapper.GetUniformLocation(p.program_id, gl.Str(name+"\x00"))
 	if location < 0 {
-		log.Printf("debug: (%v) Invalid uniform name. name=%v", p.program_name, name)
+		if p.log_enabled_flag == true {
+			log.Printf("debug: (%v) Invalid uniform name. name=%v", p.program_name, name)
+		}
 		return -1
 	}
 
@@ -140,7 +164,9 @@ func (p *ShaderProgram) SetUniformVector(name string, value vector.Vector) int {
 func (p *ShaderProgram) SetUniformColorU8(name string, value coloru8.ColorU8) int {
 	location := wrapper.GetUniformLocation(p.program_id, gl.Str(name+"\x00"))
 	if location < 0 {
-		log.Printf("debug: (%v) Invalid uniform name. name=%v", p.program_name, name)
+		if p.log_enabled_flag == true {
+			log.Printf("debug: (%v) Invalid uniform name. name=%v", p.program_name, name)
+		}
 		return -1
 	}
 
@@ -151,7 +177,9 @@ func (p *ShaderProgram) SetUniformColorU8(name string, value coloru8.ColorU8) in
 func (p *ShaderProgram) SetUniformMatrix(name string, transpose bool, value matrix.Matrix) int {
 	location := wrapper.GetUniformLocation(p.program_id, gl.Str(name+"\x00"))
 	if location < 0 {
-		log.Printf("debug: (%v) Invalid uniform name. name=%v", p.program_name, name)
+		if p.log_enabled_flag == true {
+			log.Printf("debug: (%v) Invalid uniform name. name=%v", p.program_name, name)
+		}
 		return -1
 	}
 
