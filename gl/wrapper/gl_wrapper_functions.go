@@ -7,6 +7,9 @@ import (
 	"github.com/go-gl/gl/all-core/gl"
 )
 
+const SIZEOF_INT = 4
+const SIZEOF_FLOAT = 4
+
 func ActiveTexture(arg0 uint32) {
 	gl.ActiveTexture(arg0)
 
