@@ -5,6 +5,7 @@ import (
 
 	"github.com/dabasan/go-dh3dbasis/coloru8"
 	"github.com/dabasan/go-dh3dbasis/vector"
+	"github.com/dabasan/goglf/gl/draw"
 	"github.com/dabasan/goglf/gl/wrapper"
 	"github.com/go-gl/gl/all-core/gl"
 	"github.com/go-gl/glfw/v3.3/glfw"
@@ -42,12 +43,6 @@ type GOGLFWindow struct {
 	background_color coloru8.ColorU8
 }
 
-var gws []*GOGLFWindow
-
-func init() {
-	gws = make([]*GOGLFWindow, 0)
-}
-
 func NewGOGLFWindow(width int, height int, title string) (*GOGLFWindow, error) {
 	gw := new(GOGLFWindow)
 
@@ -62,6 +57,8 @@ func NewGOGLFWindow(width int, height int, title string) (*GOGLFWindow, error) {
 	}
 	log.Printf("info: OpenGL version=%v", gl.GoStr(gl.GetString(gl.VERSION)))
 
+	front.Initialize()
+
 	window.SetKeyCallback(gw.keyCallback)
 	window.SetMouseButtonCallback(gw.mouseButtonCallback)
 	window.SetFramebufferSizeCallback(gw.framebufferSizeCallback)
@@ -73,8 +70,6 @@ func NewGOGLFWindow(width int, height int, title string) (*GOGLFWindow, error) {
 	gw.on_window_closing_func = OnWindowClosing
 
 	gw.background_color = coloru8.GetColorU8FromFloat32Components(0.0, 0.0, 0.0, 1.0)
-
-	gws = append(gws, gw)
 
 	return gw, nil
 }
@@ -154,13 +149,6 @@ func (gw *GOGLFWindow) updateMouseButtonCounts() {
 	}
 }
 
-func (gw *GOGLFWindow) InLoop() bool {
-	gw.display()
-	gw.window.SwapBuffers()
-
-	return gw.window.ShouldClose()
-}
-
 func Reshape(gw *GOGLFWindow, width int, height int) {
 
 }
@@ -169,38 +157,19 @@ func Update(gw *GOGLFWindow) {
 		vector.VGet(50.0, 50.0, 50.0), vector.VGet(0.0, 0.0, 0.0))
 }
 func Draw(gw *GOGLFWindow) {
-
+	draw.DrawAxes(100.0)
 }
 func OnWindowClosing(gw *GOGLFWindow) {
 
 }
 
-func Loop() {
-	for {
-		dead_list := make([]int, 0)
-		for i, gw := range gws {
-			if gw.window.ShouldClose() {
-				dead_list = append(dead_list, i)
-			}
-		}
-		for _, di := range dead_list {
-			removeGw(di)
-		}
-
-		if len(gws) == 0 {
-			break
-		}
-
-		for _, gw := range gws {
-			gw.display()
-			gw.window.SwapBuffers()
-		}
-
-		glfw.PollEvents()
-	}
+func (gw *GOGLFWindow) ShouldClose() bool {
+	return gw.window.ShouldClose()
 }
-func removeGw(di int) {
-	gws = append(gws[:di], gws[di+1:]...)
+
+func (gw *GOGLFWindow) InLoop() {
+	gw.display()
+	gw.window.SwapBuffers()
 }
 
 func (gw *GOGLFWindow) GetKeyPressingCount(k glfw.Key) int {
