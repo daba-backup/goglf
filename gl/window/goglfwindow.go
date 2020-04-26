@@ -49,6 +49,11 @@ func NewGOGLFWindow(width int, height int, title string) (*GOGLFWindow, error) {
 	}
 	window.MakeContextCurrent()
 
+	if err := gl.Init(); err != nil {
+		return nil, err
+	}
+	log.Printf("info: OpenGL version=%v", gl.GoStr(gl.GetString(gl.VERSION)))
+
 	window.SetKeyCallback(w.keyCallback)
 	window.SetMouseButtonCallback(w.mouseButtonCallback)
 	window.SetFramebufferSizeCallback(w.framebufferSizeCallback)
@@ -61,17 +66,6 @@ func NewGOGLFWindow(width int, height int, title string) (*GOGLFWindow, error) {
 	w.background_color = coloru8.GetColorU8FromFloat32Components(0.0, 0.0, 0.0, 1.0)
 
 	return w, nil
-}
-
-func (gw *GOGLFWindow) Initialize() error {
-	if err := gl.Init(); err != nil {
-		return err
-	}
-	log.Printf("info: OpenGL version=%v", gl.GoStr(gl.GetString(gl.VERSION)))
-
-	front.Initialize()
-
-	return nil
 }
 
 func (gw *GOGLFWindow) keyCallback(w *glfw.Window, k glfw.Key, s int, a glfw.Action, mk glfw.ModifierKey) {
