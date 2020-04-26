@@ -119,7 +119,7 @@ func ConvertScreenPosToWorldPos(screen_pos vector.Vector) vector.Vector {
 	return ret
 }
 
-func UpdateAspect(width int, height int) {
+func UpdateCameraAspect(width int, height int) {
 	c.UpdateAspect(width, height)
 	window_width = width
 	window_height = height
