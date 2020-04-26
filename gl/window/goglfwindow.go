@@ -33,14 +33,13 @@ type GOGLFWindow struct {
 	key_caf          keyCountsAndFlags
 	mouse_button_caf mouseButtonCountsAndFlags
 
-	reshape_func           ReshapeFunc
-	update_func            UpdateFunc
-	draw_func              DrawFunc
-	on_window_closing_func OnWindowClosingFunc
+	reshape_func ReshapeFunc
+	update_func  UpdateFunc
+	draw_func    DrawFunc
 
 	background_color coloru8.ColorU8
 
-	user_data *interface{}
+	user_data interface{}
 }
 
 func NewGOGLFWindow(width int, height int, title string) (*GOGLFWindow, error) {
@@ -67,7 +66,6 @@ func NewGOGLFWindow(width int, height int, title string) (*GOGLFWindow, error) {
 	gw.reshape_func = Reshape
 	gw.update_func = Update
 	gw.draw_func = Draw
-	gw.on_window_closing_func = OnWindowClosing
 
 	gw.background_color = coloru8.GetColorU8FromFloat32Components(0.0, 0.0, 0.0, 1.0)
 
@@ -172,10 +170,10 @@ func (gw *GOGLFWindow) InLoop() {
 	gw.window.SwapBuffers()
 }
 
-func (gw *GOGLFWindow) SetUserData(d *interface{}) {
+func (gw *GOGLFWindow) SetUserData(d interface{}) {
 	gw.user_data = d
 }
-func (gw *GOGLFWindow) GetUserData() *interface{} {
+func (gw *GOGLFWindow) GetUserData() interface{} {
 	return gw.user_data
 }
 
