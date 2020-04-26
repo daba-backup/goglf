@@ -26,22 +26,30 @@ type mouseButtonCountsAndFlags struct {
 type ReshapeFunc func(gw *GOGLFWindow, width int, height int)
 type UpdateFunc func(gw *GOGLFWindow)
 type DrawFunc func(gw *GOGLFWindow)
+type OnWindowClosingFunc func(gw *GOGLFWindow)
 
 type GOGLFWindow struct {
 	window *glfw.Window
 
-	key_counts          keyCountsAndFlags
-	mouse_button_counts mouseButtonCountsAndFlags
+	key_caf          keyCountsAndFlags
+	mouse_button_caf mouseButtonCountsAndFlags
 
-	reshape_func ReshapeFunc
-	update_func  UpdateFunc
-	draw_func    DrawFunc
+	reshape_func           ReshapeFunc
+	update_func            UpdateFunc
+	draw_func              DrawFunc
+	on_window_closing_func OnWindowClosingFunc
 
 	background_color coloru8.ColorU8
 }
 
+var gws []*GOGLFWindow
+
+func init() {
+	gws = make([]*GOGLFWindow, 0)
+}
+
 func NewGOGLFWindow(width int, height int, title string) (*GOGLFWindow, error) {
-	w := new(GOGLFWindow)
+	gw := new(GOGLFWindow)
 
 	window, err := glfw.CreateWindow(width, height, title, nil, nil)
 	if err != nil {
@@ -54,102 +62,103 @@ func NewGOGLFWindow(width int, height int, title string) (*GOGLFWindow, error) {
 	}
 	log.Printf("info: OpenGL version=%v", gl.GoStr(gl.GetString(gl.VERSION)))
 
-	window.SetKeyCallback(w.keyCallback)
-	window.SetMouseButtonCallback(w.mouseButtonCallback)
-	window.SetFramebufferSizeCallback(w.framebufferSizeCallback)
-	w.window = window
+	window.SetKeyCallback(gw.keyCallback)
+	window.SetMouseButtonCallback(gw.mouseButtonCallback)
+	window.SetFramebufferSizeCallback(gw.framebufferSizeCallback)
+	gw.window = window
 
-	w.reshape_func = Reshape
-	w.update_func = Update
-	w.draw_func = Draw
+	gw.reshape_func = Reshape
+	gw.update_func = Update
+	gw.draw_func = Draw
+	gw.on_window_closing_func = OnWindowClosing
 
-	w.background_color = coloru8.GetColorU8FromFloat32Components(0.0, 0.0, 0.0, 1.0)
+	gw.background_color = coloru8.GetColorU8FromFloat32Components(0.0, 0.0, 0.0, 1.0)
 
-	return w, nil
+	gws = append(gws, gw)
+
+	return gw, nil
 }
 
 func (gw *GOGLFWindow) keyCallback(w *glfw.Window, k glfw.Key, s int, a glfw.Action, mk glfw.ModifierKey) {
 	switch a {
 	case glfw.Press:
-		gw.key_counts.pressing_flags[k] = true
+		gw.key_caf.pressing_flags[k] = true
 	case glfw.Release:
-		gw.key_counts.pressing_flags[k] = false
+		gw.key_caf.pressing_flags[k] = false
 	}
 }
 func (gw *GOGLFWindow) mouseButtonCallback(w *glfw.Window, b glfw.MouseButton, a glfw.Action, mk glfw.ModifierKey) {
 	switch a {
 	case glfw.Press:
-		gw.mouse_button_counts.pressing_flags[b] = true
+		gw.mouse_button_caf.pressing_flags[b] = true
 	case glfw.Release:
-		gw.mouse_button_counts.pressing_flags[b] = false
+		gw.mouse_button_caf.pressing_flags[b] = false
 	}
 }
 func (gw *GOGLFWindow) framebufferSizeCallback(w *glfw.Window, width int, height int) {
-	front.UpdateAspect(width, height)
-	Reshape(gw, width, height)
+	front.UpdateCameraAspect(width, height)
+	gw.reshape_func(gw, width, height)
 }
 
-func (w *GOGLFWindow) ClearDrawScreen() {
-	wrapper.ClearColor(w.background_color.R, w.background_color.G, w.background_color.B, w.background_color.A)
+func (gw *GOGLFWindow) ClearDrawScreen() {
+	wrapper.ClearColor(gw.background_color.R, gw.background_color.G, gw.background_color.B, gw.background_color.A)
 	wrapper.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 }
 
-func (w *GOGLFWindow) display() {
-	w.updateKeyCounts()
-	w.updateMouseButtonCounts()
+func (gw *GOGLFWindow) display() {
+	gw.updateKeyCounts()
+	gw.updateMouseButtonCounts()
 
-	w.ClearDrawScreen()
+	gw.ClearDrawScreen()
 	front.UpdateLighting()
 	front.UpdateFog()
 
-	Update(w)
+	gw.update_func(gw)
 	front.UpdateCamera()
-	Draw(w)
+	gw.draw_func(gw)
 }
-func (w *GOGLFWindow) updateKeyCounts() {
-	for key, val := range w.key_counts.pressing_flags {
-		if _, ok := w.key_counts.pressing_counts[key]; !ok {
-			w.key_counts.pressing_counts[key] = 0
+func (gw *GOGLFWindow) updateKeyCounts() {
+	for key, val := range gw.key_caf.pressing_flags {
+		if _, ok := gw.key_caf.pressing_counts[key]; !ok {
+			gw.key_caf.pressing_counts[key] = 0
 		}
-		if _, ok := w.key_counts.releasing_counts[key]; !ok {
-			w.key_counts.releasing_counts[key] = 0
+		if _, ok := gw.key_caf.releasing_counts[key]; !ok {
+			gw.key_caf.releasing_counts[key] = 0
 		}
 
 		if val == true {
-			w.key_counts.pressing_counts[key]++
-			w.key_counts.releasing_counts[key] = 0
+			gw.key_caf.pressing_counts[key]++
+			gw.key_caf.releasing_counts[key] = 0
 		} else {
-			w.key_counts.releasing_counts[key]++
-			w.key_counts.pressing_counts[key] = 0
+			gw.key_caf.releasing_counts[key]++
+			gw.key_caf.pressing_counts[key] = 0
 		}
 	}
 }
-func (w *GOGLFWindow) updateMouseButtonCounts() {
-	for key, val := range w.mouse_button_counts.pressing_flags {
-		if _, ok := w.mouse_button_counts.pressing_counts[key]; !ok {
-			w.mouse_button_counts.pressing_counts[key] = 0
+func (gw *GOGLFWindow) updateMouseButtonCounts() {
+	for key, val := range gw.mouse_button_caf.pressing_flags {
+		if _, ok := gw.mouse_button_caf.pressing_counts[key]; !ok {
+			gw.mouse_button_caf.pressing_counts[key] = 0
 		}
-		if _, ok := w.mouse_button_counts.releasing_counts[key]; !ok {
-			w.mouse_button_counts.releasing_counts[key] = 0
+		if _, ok := gw.mouse_button_caf.releasing_counts[key]; !ok {
+			gw.mouse_button_caf.releasing_counts[key] = 0
 		}
 
 		if val == true {
-			w.mouse_button_counts.pressing_counts[key]++
-			w.mouse_button_counts.releasing_counts[key] = 0
+			gw.mouse_button_caf.pressing_counts[key]++
+			gw.mouse_button_caf.releasing_counts[key] = 0
 		} else {
-			w.mouse_button_counts.releasing_counts[key]++
-			w.mouse_button_counts.pressing_counts[key] = 0
+			gw.mouse_button_caf.releasing_counts[key]++
+			gw.mouse_button_caf.pressing_counts[key] = 0
 		}
 	}
 }
 
-func (w *GOGLFWindow) Loop() {
-	for !w.window.ShouldClose() {
-		w.display()
-		w.window.SwapBuffers()
+func (gw *GOGLFWindow) InLoop() bool {
+	gw.display()
+	gw.window.SwapBuffers()
 
-		glfw.PollEvents()
-	}
+	return gw.window.ShouldClose()
 }
 
 func Reshape(gw *GOGLFWindow, width int, height int) {
@@ -162,9 +171,40 @@ func Update(gw *GOGLFWindow) {
 func Draw(gw *GOGLFWindow) {
 
 }
+func OnWindowClosing(gw *GOGLFWindow) {
 
-func (w *GOGLFWindow) GetKeyPressingCount(k glfw.Key) int {
-	val, ok := w.key_counts.pressing_counts[k]
+}
+
+func Loop() {
+	for {
+		dead_list := make([]int, 0)
+		for i, gw := range gws {
+			if gw.window.ShouldClose() {
+				dead_list = append(dead_list, i)
+			}
+		}
+		for _, di := range dead_list {
+			removeGw(di)
+		}
+
+		if len(gws) == 0 {
+			break
+		}
+
+		for _, gw := range gws {
+			gw.display()
+			gw.window.SwapBuffers()
+		}
+
+		glfw.PollEvents()
+	}
+}
+func removeGw(di int) {
+	gws = append(gws[:di], gws[di+1:]...)
+}
+
+func (gw *GOGLFWindow) GetKeyPressingCount(k glfw.Key) int {
+	val, ok := gw.key_caf.pressing_counts[k]
 	if ok == false {
 		return -1
 	} else {
