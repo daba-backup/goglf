@@ -13,6 +13,7 @@ import (
 	"github.com/dabasan/goglf/gl/front"
 )
 
+type OnWindowClosingFunc func(gw *GOGLFWindow)
 type UpdateFunc func(gw *GOGLFWindow)
 type DrawFunc func(gw *GOGLFWindow)
 
@@ -22,9 +23,8 @@ type GOGLFWindow struct {
 	key_caf          *keyCountsAndFlags
 	mouse_button_caf *mouseButtonCountsAndFlags
 
-	update_func UpdateFunc
-	draw_func   DrawFunc
-
+	update_func      UpdateFunc
+	draw_func        DrawFunc
 	Background_color coloru8.ColorU8
 
 	User_data interface{}
@@ -51,6 +51,7 @@ func NewGOGLFWindow(width int, height int, title string) (*GOGLFWindow, error) {
 
 	window.SetKeyCallback(gw.keyCallback)
 	window.SetMouseButtonCallback(gw.mouseButtonCallback)
+	window.SetCloseCallback(gw.closeCallback)
 	gw.Window = window
 
 	gw.update_func = Update
@@ -76,6 +77,12 @@ func (gw *GOGLFWindow) mouseButtonCallback(w *glfw.Window, b glfw.MouseButton, a
 	case glfw.Release:
 		gw.mouse_button_caf.pressing_flags[b] = false
 	}
+}
+func (gw *GOGLFWindow) closeCallback(w *glfw.Window) {
+	Lock()
+	gw.Window.MakeContextCurrent()
+	OnWindowClosing(gw)
+	Unlock()
 }
 
 func (gw *GOGLFWindow) ClearDrawScreen() {
@@ -140,15 +147,15 @@ func (gw *GOGLFWindow) updateAspect() {
 	front.UpdateCameraAspect(width, height)
 }
 
+func OnWindowClosing(gw *GOGLFWindow) {
+
+}
 func Update(gw *GOGLFWindow) {
 	front.SetCameraPositionAndTarget_UpVecY(
 		vector.VGet(50.0, 50.0, 50.0), vector.VGet(0.0, 0.0, 0.0))
 }
 func Draw(gw *GOGLFWindow) {
 	draw.DrawAxes(100.0)
-}
-func OnWindowClosing(gw *GOGLFWindow) {
-
 }
 
 func (gw *GOGLFWindow) InLoop() {
