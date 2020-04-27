@@ -5,6 +5,7 @@ import (
 
 	"github.com/dabasan/go-dh3dbasis/coloru8"
 	"github.com/dabasan/go-dh3dbasis/vector"
+	"github.com/dabasan/goglf/gl/draw"
 	"github.com/dabasan/goglf/gl/wrapper"
 	"github.com/go-gl/gl/all-core/gl"
 	"github.com/go-gl/glfw/v3.3/glfw"
@@ -12,7 +13,6 @@ import (
 	"github.com/dabasan/goglf/gl/front"
 )
 
-type ReshapeFunc func(gw *GOGLFWindow, width int, height int)
 type UpdateFunc func(gw *GOGLFWindow)
 type DrawFunc func(gw *GOGLFWindow)
 
@@ -22,9 +22,8 @@ type GOGLFWindow struct {
 	key_caf          *keyCountsAndFlags
 	mouse_button_caf *mouseButtonCountsAndFlags
 
-	reshape_func ReshapeFunc
-	update_func  UpdateFunc
-	draw_func    DrawFunc
+	update_func UpdateFunc
+	draw_func   DrawFunc
 
 	Background_color coloru8.ColorU8
 
@@ -52,10 +51,8 @@ func NewGOGLFWindow(width int, height int, title string) (*GOGLFWindow, error) {
 
 	window.SetKeyCallback(gw.keyCallback)
 	window.SetMouseButtonCallback(gw.mouseButtonCallback)
-	window.SetFramebufferSizeCallback(gw.framebufferSizeCallback)
 	gw.Window = window
 
-	gw.reshape_func = Reshape
 	gw.update_func = Update
 	gw.draw_func = Draw
 
@@ -80,10 +77,6 @@ func (gw *GOGLFWindow) mouseButtonCallback(w *glfw.Window, b glfw.MouseButton, a
 		gw.mouse_button_caf.pressing_flags[b] = false
 	}
 }
-func (gw *GOGLFWindow) framebufferSizeCallback(w *glfw.Window, width int, height int) {
-	front.UpdateCameraAspect(width, height)
-	gw.reshape_func(gw, width, height)
-}
 
 func (gw *GOGLFWindow) ClearDrawScreen() {
 	wrapper.ClearColor(gw.Background_color.R, gw.Background_color.G, gw.Background_color.B, gw.Background_color.A)
@@ -93,6 +86,8 @@ func (gw *GOGLFWindow) ClearDrawScreen() {
 func (gw *GOGLFWindow) display() {
 	gw.updateKeyCounts()
 	gw.updateMouseButtonCounts()
+
+	gw.updateAspect()
 
 	gw.ClearDrawScreen()
 	front.UpdateLighting()
@@ -138,30 +133,32 @@ func (gw *GOGLFWindow) updateMouseButtonCounts() {
 		}
 	}
 }
+func (gw *GOGLFWindow) updateAspect() {
+	width, height := gw.Window.GetSize()
 
-func Reshape(gw *GOGLFWindow, width int, height int) {
-
+	wrapper.Viewport(0, 0, int32(width), int32(height))
+	front.UpdateCameraAspect(width, height)
 }
+
 func Update(gw *GOGLFWindow) {
 	front.SetCameraPositionAndTarget_UpVecY(
 		vector.VGet(50.0, 50.0, 50.0), vector.VGet(0.0, 0.0, 0.0))
 }
 func Draw(gw *GOGLFWindow) {
-
+	draw.DrawAxes(100.0)
 }
 func OnWindowClosing(gw *GOGLFWindow) {
 
 }
 
 func (gw *GOGLFWindow) InLoop() {
+	Lock()
 	gw.Window.MakeContextCurrent()
 	gw.display()
 	gw.Window.SwapBuffers()
+	Unlock()
 }
 
-func (gw *GOGLFWindow) SetReshapeFunc(f ReshapeFunc) {
-	gw.reshape_func = f
-}
 func (gw *GOGLFWindow) SetUpdateFunc(f UpdateFunc) {
 	gw.update_func = f
 }
