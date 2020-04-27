@@ -12,34 +12,6 @@ import (
 	"github.com/dabasan/goglf/gl/front"
 )
 
-type keyCountsAndFlags struct {
-	pressing_counts  map[glfw.Key]int
-	releasing_counts map[glfw.Key]int
-	pressing_flags   map[glfw.Key]bool
-}
-type mouseButtonCountsAndFlags struct {
-	pressing_counts  map[glfw.MouseButton]int
-	releasing_counts map[glfw.MouseButton]int
-	pressing_flags   map[glfw.MouseButton]bool
-}
-
-func newKeyCountsAndFlags() *keyCountsAndFlags {
-	ret := new(keyCountsAndFlags)
-	ret.pressing_counts = make(map[glfw.Key]int)
-	ret.releasing_counts = make(map[glfw.Key]int)
-	ret.pressing_flags = make(map[glfw.Key]bool)
-
-	return ret
-}
-func newMouseButtonCountsAndFlags() *mouseButtonCountsAndFlags {
-	ret := new(mouseButtonCountsAndFlags)
-	ret.pressing_counts = make(map[glfw.MouseButton]int)
-	ret.releasing_counts = make(map[glfw.MouseButton]int)
-	ret.pressing_flags = make(map[glfw.MouseButton]bool)
-
-	return ret
-}
-
 type ReshapeFunc func(gw *GOGLFWindow, width int, height int)
 type UpdateFunc func(gw *GOGLFWindow)
 type DrawFunc func(gw *GOGLFWindow)
