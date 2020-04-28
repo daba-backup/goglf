@@ -31,9 +31,9 @@ type GOGLFWindow struct {
 	update_func            UpdateFunc
 	draw_func              DrawFunc
 
-	Background_color coloru8.ColorU8
+	background_color coloru8.ColorU8
 
-	User_data interface{}
+	user_data interface{}
 }
 
 func NewGOGLFWindow(width int, height int, title string) (*GOGLFWindow, error) {
@@ -69,7 +69,7 @@ func NewGOGLFWindow(width int, height int, title string) (*GOGLFWindow, error) {
 	gw.update_func = Update
 	gw.draw_func = Draw
 
-	gw.Background_color = coloru8.GetColorU8FromFloat32Components(0.0, 0.0, 0.0, 1.0)
+	gw.background_color = coloru8.GetColorU8FromFloat32Components(0.0, 0.0, 0.0, 1.0)
 
 	return gw, nil
 }
@@ -98,24 +98,39 @@ func (gw *GOGLFWindow) closeCallback(w *glfw.Window) {
 }
 
 func (gw *GOGLFWindow) clearDrawScreen() {
-	wrapper.ClearColor(gw.Background_color.R, gw.Background_color.G, gw.Background_color.B, gw.Background_color.A)
+	wrapper.ClearColor(gw.background_color.R, gw.background_color.G, gw.background_color.B, gw.background_color.A)
 	wrapper.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 }
 
+func (gw *GOGLFWindow) SetBackgroundColor(color coloru8.ColorU8) {
+	gw.background_color = color
+}
+func (gw *GOGLFWindow) GetBackgroundColor() coloru8.ColorU8 {
+	return gw.background_color
+}
+
+func (gw *GOGLFWindow) SetUserData(user_data interface{}) {
+	gw.user_data = user_data
+}
+func (gw *GOGLFWindow) GetUserData() interface{} {
+	return gw.user_data
+}
+
 func (gw *GOGLFWindow) display() {
+	//Update input.
 	gw.updateKeyCounts()
 	gw.updateMouseButtonCounts()
 	gw.updateCursorProperties()
 
-	gw.updateAspect()
-
+	//Default updates==========
 	gw.clearDrawScreen()
+	gw.updateAspect()
 	front.UpdateLighting()
 	front.UpdateFog()
-
-	gw.update_func(gw)
+	//====================
+	gw.update_func(gw) //User update
 	front.UpdateCamera()
-	gw.draw_func(gw)
+	gw.draw_func(gw) //User draw
 }
 func (gw *GOGLFWindow) updateKeyCounts() {
 	for key, val := range gw.key_caf.pressing_flags {
@@ -167,33 +182,12 @@ func (gw *GOGLFWindow) updateAspect() {
 	front.UpdateCameraAspect(width, height)
 }
 
-func OnWindowClosing(gw *GOGLFWindow) {
-
-}
-func Update(gw *GOGLFWindow) {
-	front.SetCameraPositionAndTarget_UpVecY(
-		vector.VGet(50.0, 50.0, 50.0), vector.VGet(0.0, 0.0, 0.0))
-}
-func Draw(gw *GOGLFWindow) {
-	draw.DrawAxes(100.0)
-}
-
 func (gw *GOGLFWindow) InLoop() {
 	Lock()
 	gw.Window.MakeContextCurrent()
 	gw.display()
 	gw.Window.SwapBuffers()
 	Unlock()
-}
-
-func (gw *GOGLFWindow) SetOnWindowClosingFunc(f OnWindowClosingFunc) {
-	gw.on_window_closing_func = f
-}
-func (gw *GOGLFWindow) SetUpdateFunc(f UpdateFunc) {
-	gw.update_func = f
-}
-func (gw *GOGLFWindow) SetDrawFunc(f DrawFunc) {
-	gw.draw_func = f
 }
 
 func (gw *GOGLFWindow) GetKeyPressingCount(k glfw.Key) int {
@@ -230,4 +224,25 @@ func (gw *GOGLFWindow) GetMouseReleasingCount(b glfw.MouseButton) int {
 }
 func (gw *GOGLFWindow) GetCursorDiff() (float64, float64) {
 	return gw.cursor_diff_x, gw.cursor_diff_y
+}
+
+func OnWindowClosing(gw *GOGLFWindow) {
+
+}
+func Update(gw *GOGLFWindow) {
+	front.SetCameraPositionAndTarget_UpVecY(
+		vector.VGet(50.0, 50.0, 50.0), vector.VGet(0.0, 0.0, 0.0))
+}
+func Draw(gw *GOGLFWindow) {
+	draw.DrawAxes(100.0)
+}
+
+func (gw *GOGLFWindow) SetOnWindowClosingFunc(f OnWindowClosingFunc) {
+	gw.on_window_closing_func = f
+}
+func (gw *GOGLFWindow) SetUpdateFunc(f UpdateFunc) {
+	gw.update_func = f
+}
+func (gw *GOGLFWindow) SetDrawFunc(f DrawFunc) {
+	gw.draw_func = f
 }
