@@ -23,8 +23,10 @@ type GOGLFWindow struct {
 	key_caf          *keyCountsAndFlags
 	mouse_button_caf *mouseButtonCountsAndFlags
 
-	update_func      UpdateFunc
-	draw_func        DrawFunc
+	on_window_closing_func OnWindowClosingFunc
+	update_func            UpdateFunc
+	draw_func              DrawFunc
+
 	Background_color coloru8.ColorU8
 
 	User_data interface{}
@@ -37,14 +39,16 @@ func NewGOGLFWindow(width int, height int, title string) (*GOGLFWindow, error) {
 	if err != nil {
 		return nil, err
 	}
-	window.MakeContextCurrent()
 
+	Lock()
+	window.MakeContextCurrent()
 	if err := gl.Init(); err != nil {
 		return nil, err
 	}
 	log.Printf("info: OpenGL version=%v", gl.GoStr(gl.GetString(gl.VERSION)))
 
 	front.Initialize()
+	Unlock()
 
 	gw.key_caf = newKeyCountsAndFlags()
 	gw.mouse_button_caf = newMouseButtonCountsAndFlags()
@@ -54,6 +58,7 @@ func NewGOGLFWindow(width int, height int, title string) (*GOGLFWindow, error) {
 	window.SetCloseCallback(gw.closeCallback)
 	gw.Window = window
 
+	gw.on_window_closing_func = OnWindowClosing
 	gw.update_func = Update
 	gw.draw_func = Draw
 
@@ -81,11 +86,11 @@ func (gw *GOGLFWindow) mouseButtonCallback(w *glfw.Window, b glfw.MouseButton, a
 func (gw *GOGLFWindow) closeCallback(w *glfw.Window) {
 	Lock()
 	gw.Window.MakeContextCurrent()
-	OnWindowClosing(gw)
+	gw.on_window_closing_func(gw)
 	Unlock()
 }
 
-func (gw *GOGLFWindow) ClearDrawScreen() {
+func (gw *GOGLFWindow) clearDrawScreen() {
 	wrapper.ClearColor(gw.Background_color.R, gw.Background_color.G, gw.Background_color.B, gw.Background_color.A)
 	wrapper.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 }
@@ -96,7 +101,7 @@ func (gw *GOGLFWindow) display() {
 
 	gw.updateAspect()
 
-	gw.ClearDrawScreen()
+	gw.clearDrawScreen()
 	front.UpdateLighting()
 	front.UpdateFog()
 
@@ -166,6 +171,9 @@ func (gw *GOGLFWindow) InLoop() {
 	Unlock()
 }
 
+func (gw *GOGLFWindow) SetOnWindowClosingFunc(f OnWindowClosingFunc) {
+	gw.on_window_closing_func = f
+}
 func (gw *GOGLFWindow) SetUpdateFunc(f UpdateFunc) {
 	gw.update_func = f
 }
