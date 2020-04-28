@@ -28,9 +28,9 @@ func loadDefaultShaders() {
 		"./Data/Shader/330/texture_drawer/vshader.glsl",
 		"./Data/Shader/330/texture_drawer/fshader.glsl")
 	shader.CreateProgram(
-		"line_drawer",
-		"./Data/Shader/330/line_drawer/vshader.glsl",
-		"./Data/Shader/330/line_drawer/fshader.glsl")
+		"simple_2d",
+		"./Data/Shader/330/simple_2d/vshader.glsl",
+		"./Data/Shader/330/simple_2d/fshader.glsl")
 
 	log.Printf("info: Default shaders loaded.")
 }

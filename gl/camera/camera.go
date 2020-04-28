@@ -138,12 +138,12 @@ func (c *Camera) Update() {
 
 	for _, program := range c.programs {
 		program.Enable()
-		program.SetUniformVector("camera_position", c.position)
-		program.SetUniformVector("camera_target", c.target)
-		program.SetUniformMatrix("projection", true, c.projection_matrix)
-		program.SetUniformMatrix("view_transformation", true, c.view_transformation_matrix)
-		program.SetUniform1f("camera_near", c.near)
-		program.SetUniform1f("camera_far", c.far)
+		program.SetUniformVector("camera.position", c.position)
+		program.SetUniformVector("camera.target", c.target)
+		program.SetUniformMatrix("camera.projection", true, c.projection_matrix)
+		program.SetUniformMatrix("camera.view_transformation", true, c.view_transformation_matrix)
+		program.SetUniform1f("camera.near", c.near)
+		program.SetUniform1f("camera.far", c.far)
 		program.Disable()
 	}
 

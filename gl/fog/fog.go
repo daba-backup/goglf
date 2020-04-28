@@ -43,9 +43,9 @@ func (f *Fog) SetFogColor(color coloru8.ColorU8) {
 func (f *Fog) Update() {
 	for _, program := range f.programs {
 		program.Enable()
-		program.SetUniform1f("fog_start", f.start)
-		program.SetUniform1f("fog_end", f.end)
-		program.SetUniformColorU8("fog_color", f.color)
+		program.SetUniform1f("fog.start", f.start)
+		program.SetUniform1f("fog.end", f.end)
+		program.SetUniformColorU8("fog.color", f.color)
 		program.Disable()
 	}
 }
