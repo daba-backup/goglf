@@ -52,8 +52,7 @@ func addProgramsToFront() {
 
 	AddProgramToCamera(texture)
 	AddProgramToCamera(color)
-
 	AddProgramToFog(texture)
-
+	AddProgramToFog(color)
 	AddProgramToLighting(texture)
 }
