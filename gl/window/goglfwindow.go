@@ -26,6 +26,8 @@ type GOGLFWindow struct {
 	last_cursor_pos_y float64
 	cursor_diff_x     float64
 	cursor_diff_y     float64
+	scroll_x          float64
+	scroll_y          float64
 
 	on_window_closing_func OnWindowClosingFunc
 	update_func            UpdateFunc
@@ -59,9 +61,12 @@ func NewGOGLFWindow(width int, height int, title string) (*GOGLFWindow, error) {
 	gw.last_cursor_pos_x, gw.last_cursor_pos_y = window.GetCursorPos()
 	gw.cursor_diff_x = 0.0
 	gw.cursor_diff_y = 0.0
+	gw.scroll_x = 0.0
+	gw.scroll_y = 0.0
 
 	window.SetKeyCallback(gw.keyCallback)
 	window.SetMouseButtonCallback(gw.mouseButtonCallback)
+	window.SetScrollCallback(gw.scrollCallback)
 	window.SetCloseCallback(gw.closeCallback)
 	gw.Window = window
 
@@ -89,6 +94,10 @@ func (gw *GOGLFWindow) mouseButtonCallback(w *glfw.Window, b glfw.MouseButton, a
 	case glfw.Release:
 		gw.mouse_button_caf.pressing_flags[b] = false
 	}
+}
+func (gw *GOGLFWindow) scrollCallback(w *glfw.Window, xoff float64, yoff float64) {
+	gw.scroll_x = xoff
+	gw.scroll_y = yoff
 }
 func (gw *GOGLFWindow) closeCallback(w *glfw.Window) {
 	Lock()
@@ -129,6 +138,7 @@ func (gw *GOGLFWindow) display() {
 	front.UpdateFog()
 	//====================
 	gw.update_func(gw) //User update
+	gw.resetScrollVols()
 	front.UpdateCamera()
 	gw.draw_func(gw) //User draw
 }
@@ -181,6 +191,10 @@ func (gw *GOGLFWindow) updateAspect() {
 	wrapper.Viewport(0, 0, int32(width), int32(height))
 	front.UpdateCameraAspect(width, height)
 }
+func (gw *GOGLFWindow) resetScrollVols() {
+	gw.scroll_x = 0.0
+	gw.scroll_y = 0.0
+}
 
 func (gw *GOGLFWindow) InLoop() {
 	Lock()
@@ -224,6 +238,9 @@ func (gw *GOGLFWindow) GetMouseReleasingCount(b glfw.MouseButton) int {
 }
 func (gw *GOGLFWindow) GetCursorDiff() (float64, float64) {
 	return gw.cursor_diff_x, gw.cursor_diff_y
+}
+func (gw *GOGLFWindow) GetScrollVols() (float64, float64) {
+	return gw.scroll_x, gw.scroll_y
 }
 
 func OnWindowClosing(gw *GOGLFWindow) {
