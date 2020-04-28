@@ -20,8 +20,12 @@ type DrawFunc func(gw *GOGLFWindow)
 type GOGLFWindow struct {
 	Window *glfw.Window
 
-	key_caf          *keyCountsAndFlags
-	mouse_button_caf *mouseButtonCountsAndFlags
+	key_caf           *keyCountsAndFlags
+	mouse_button_caf  *mouseButtonCountsAndFlags
+	last_cursor_pos_x float64
+	last_cursor_pos_y float64
+	cursor_diff_x     float64
+	cursor_diff_y     float64
 
 	on_window_closing_func OnWindowClosingFunc
 	update_func            UpdateFunc
@@ -52,6 +56,9 @@ func NewGOGLFWindow(width int, height int, title string) (*GOGLFWindow, error) {
 
 	gw.key_caf = newKeyCountsAndFlags()
 	gw.mouse_button_caf = newMouseButtonCountsAndFlags()
+	gw.last_cursor_pos_x, gw.last_cursor_pos_y = window.GetCursorPos()
+	gw.cursor_diff_x = 0.0
+	gw.cursor_diff_y = 0.0
 
 	window.SetKeyCallback(gw.keyCallback)
 	window.SetMouseButtonCallback(gw.mouseButtonCallback)
@@ -98,6 +105,7 @@ func (gw *GOGLFWindow) clearDrawScreen() {
 func (gw *GOGLFWindow) display() {
 	gw.updateKeyCounts()
 	gw.updateMouseButtonCounts()
+	gw.updateCursorProperties()
 
 	gw.updateAspect()
 
@@ -144,6 +152,13 @@ func (gw *GOGLFWindow) updateMouseButtonCounts() {
 			gw.mouse_button_caf.pressing_counts[key] = 0
 		}
 	}
+}
+func (gw *GOGLFWindow) updateCursorProperties() {
+	cursor_pos_x, cursor_pos_y := gw.Window.GetCursorPos()
+	gw.cursor_diff_x = cursor_pos_x - gw.last_cursor_pos_x
+	gw.cursor_diff_y = cursor_pos_y - gw.last_cursor_pos_y
+	gw.last_cursor_pos_x = cursor_pos_x
+	gw.last_cursor_pos_y = cursor_pos_y
 }
 func (gw *GOGLFWindow) updateAspect() {
 	width, height := gw.Window.GetSize()
@@ -212,4 +227,7 @@ func (gw *GOGLFWindow) GetMouseReleasingCount(b glfw.MouseButton) int {
 	} else {
 		return val
 	}
+}
+func (gw *GOGLFWindow) GetCursorDiff() (float64, float64) {
+	return gw.cursor_diff_x, gw.cursor_diff_y
 }
