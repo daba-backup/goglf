@@ -116,7 +116,7 @@ func GetProgramID(program_name string) (uint32, bool) {
 func UseProgram(program_name string) int {
 	val, ok := program_ids_map[program_name]
 	if ok == false {
-		log.Printf("warn: No such program. program_name=%v", program_name)
+		log.Printf("trace: No such program. program_name=%v", program_name)
 		return -1
 	}
 

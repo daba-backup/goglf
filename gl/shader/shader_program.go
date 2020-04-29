@@ -47,7 +47,7 @@ func (p *ShaderProgram) SetUniform1i(name string, value int32) int {
 	location := wrapper.GetUniformLocation(p.program_id, gl.Str(name+"\x00"))
 	if location < 0 {
 		if p.logging_enabled_flag == true {
-			log.Printf("debug: (%v) Invalid uniform name. name=%v", p.program_name, name)
+			log.Printf("trace: (%v) Invalid uniform name. name=%v", p.program_name, name)
 		}
 		return -1
 	}
@@ -60,7 +60,7 @@ func (p *ShaderProgram) SetUniform2i(name string, value0 int32, value1 int32) in
 	location := wrapper.GetUniformLocation(p.program_id, gl.Str(name+"\x00"))
 	if location < 0 {
 		if p.logging_enabled_flag == true {
-			log.Printf("debug: (%v) Invalid uniform name. name=%v", p.program_name, name)
+			log.Printf("trace: (%v) Invalid uniform name. name=%v", p.program_name, name)
 		}
 		return -1
 	}
@@ -73,7 +73,7 @@ func (p *ShaderProgram) SetUniform3i(name string, value0 int32, value1 int32, va
 	location := wrapper.GetUniformLocation(p.program_id, gl.Str(name+"\x00"))
 	if location < 0 {
 		if p.logging_enabled_flag == true {
-			log.Printf("debug: (%v) Invalid uniform name. name=%v", p.program_name, name)
+			log.Printf("trace: (%v) Invalid uniform name. name=%v", p.program_name, name)
 		}
 		return -1
 	}
@@ -86,7 +86,7 @@ func (p *ShaderProgram) SetUniform4i(name string, value0 int32, value1 int32, va
 	location := wrapper.GetUniformLocation(p.program_id, gl.Str(name+"\x00"))
 	if location < 0 {
 		if p.logging_enabled_flag == true {
-			log.Printf("debug: (%v) Invalid uniform name. name=%v", p.program_name, name)
+			log.Printf("trace: (%v) Invalid uniform name. name=%v", p.program_name, name)
 		}
 		return -1
 	}
@@ -99,7 +99,7 @@ func (p *ShaderProgram) SetUniform1f(name string, value float32) int {
 	location := wrapper.GetUniformLocation(p.program_id, gl.Str(name+"\x00"))
 	if location < 0 {
 		if p.logging_enabled_flag == true {
-			log.Printf("debug: (%v) Invalid uniform name. name=%v", p.program_name, name)
+			log.Printf("trace: (%v) Invalid uniform name. name=%v", p.program_name, name)
 		}
 		return -1
 	}
@@ -112,7 +112,7 @@ func (p *ShaderProgram) SetUniform2f(name string, value0 float32, value1 float32
 	location := wrapper.GetUniformLocation(p.program_id, gl.Str(name+"\x00"))
 	if location < 0 {
 		if p.logging_enabled_flag == true {
-			log.Printf("debug: (%v) Invalid uniform name. name=%v", p.program_name, name)
+			log.Printf("trace: (%v) Invalid uniform name. name=%v", p.program_name, name)
 		}
 		return -1
 	}
@@ -125,7 +125,7 @@ func (p *ShaderProgram) SetUniform3f(name string, value0 float32, value1 float32
 	location := wrapper.GetUniformLocation(p.program_id, gl.Str(name+"\x00"))
 	if location < 0 {
 		if p.logging_enabled_flag == true {
-			log.Printf("debug: (%v) Invalid uniform name. name=%v", p.program_name, name)
+			log.Printf("trace: (%v) Invalid uniform name. name=%v", p.program_name, name)
 		}
 		return -1
 	}
@@ -138,7 +138,7 @@ func (p *ShaderProgram) SetUniform4f(name string, value0 float32, value1 float32
 	location := wrapper.GetUniformLocation(p.program_id, gl.Str(name+"\x00"))
 	if location < 0 {
 		if p.logging_enabled_flag == true {
-			log.Printf("debug: (%v) Invalid uniform name. name=%v", p.program_name, name)
+			log.Printf("trace: (%v) Invalid uniform name. name=%v", p.program_name, name)
 		}
 		return -1
 	}
@@ -151,7 +151,7 @@ func (p *ShaderProgram) SetUniformVector(name string, value vector.Vector) int {
 	location := wrapper.GetUniformLocation(p.program_id, gl.Str(name+"\x00"))
 	if location < 0 {
 		if p.logging_enabled_flag == true {
-			log.Printf("debug: (%v) Invalid uniform name. name=%v", p.program_name, name)
+			log.Printf("trace: (%v) Invalid uniform name. name=%v", p.program_name, name)
 		}
 		return -1
 	}
@@ -164,7 +164,7 @@ func (p *ShaderProgram) SetUniformColorU8(name string, value coloru8.ColorU8) in
 	location := wrapper.GetUniformLocation(p.program_id, gl.Str(name+"\x00"))
 	if location < 0 {
 		if p.logging_enabled_flag == true {
-			log.Printf("debug: (%v) Invalid uniform name. name=%v", p.program_name, name)
+			log.Printf("trace: (%v) Invalid uniform name. name=%v", p.program_name, name)
 		}
 		return -1
 	}
@@ -177,7 +177,7 @@ func (p *ShaderProgram) SetUniformMatrix(name string, transpose bool, value matr
 	location := wrapper.GetUniformLocation(p.program_id, gl.Str(name+"\x00"))
 	if location < 0 {
 		if p.logging_enabled_flag == true {
-			log.Printf("debug: (%v) Invalid uniform name. name=%v", p.program_name, name)
+			log.Printf("trace: (%v) Invalid uniform name. name=%v", p.program_name, name)
 		}
 		return -1
 	}
