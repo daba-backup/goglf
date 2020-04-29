@@ -18,16 +18,16 @@ type ShaderProgram struct {
 }
 
 func NewShaderProgram(program_name string) (*ShaderProgram, bool) {
-	program := new(ShaderProgram)
-	program.program_name = program_name
-	program.logging_enabled_flag = false
-
 	program_id, ok := GetProgramID(program_name)
 	if ok == false {
 		log.Printf("warn: This program is invalid. program_name=%v", program_name)
-		return program, false
+		return nil, false
 	}
+
+	program := new(ShaderProgram)
+	program.program_name = program_name
 	program.program_id = program_id
+	program.logging_enabled_flag = false
 
 	return program, true
 }

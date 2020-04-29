@@ -18,7 +18,8 @@ type UpdateFunc func(gw *GOGLFWindow)
 type DrawFunc func(gw *GOGLFWindow)
 
 type GOGLFWindow struct {
-	Window *glfw.Window
+	Window    *glfw.Window
+	is_hidden bool
 
 	key_caf           *keyCountsAndFlags
 	mouse_button_caf  *mouseButtonCountsAndFlags
@@ -39,6 +40,9 @@ type GOGLFWindow struct {
 }
 
 func NewGOGLFWindow(width int, height int, title string) (*GOGLFWindow, error) {
+	Lock()
+	defer Unlock()
+
 	gw := new(GOGLFWindow)
 
 	window, err := glfw.CreateWindow(width, height, title, nil, nil)
@@ -46,15 +50,22 @@ func NewGOGLFWindow(width int, height int, title string) (*GOGLFWindow, error) {
 		return nil, err
 	}
 
-	Lock()
 	window.MakeContextCurrent()
 	if err := gl.Init(); err != nil {
 		return nil, err
 	}
 	log.Printf("info: OpenGL version=%v", gl.GoStr(gl.GetString(gl.VERSION)))
 
-	front.Initialize()
-	Unlock()
+	if err := front.Initialize(); err != nil {
+		return nil, err
+	}
+
+	window.SetKeyCallback(gw.keyCallback)
+	window.SetMouseButtonCallback(gw.mouseButtonCallback)
+	window.SetScrollCallback(gw.scrollCallback)
+	window.SetCloseCallback(gw.closeCallback)
+	gw.Window = window
+	gw.is_hidden = false
 
 	gw.key_caf = newKeyCountsAndFlags()
 	gw.mouse_button_caf = newMouseButtonCountsAndFlags()
@@ -63,12 +74,6 @@ func NewGOGLFWindow(width int, height int, title string) (*GOGLFWindow, error) {
 	gw.cursor_diff_y = 0.0
 	gw.scroll_x = 0.0
 	gw.scroll_y = 0.0
-
-	window.SetKeyCallback(gw.keyCallback)
-	window.SetMouseButtonCallback(gw.mouseButtonCallback)
-	window.SetScrollCallback(gw.scrollCallback)
-	window.SetCloseCallback(gw.closeCallback)
-	gw.Window = window
 
 	gw.on_window_closing_func = OnWindowClosing
 	gw.update_func = Update
@@ -101,14 +106,27 @@ func (gw *GOGLFWindow) scrollCallback(w *glfw.Window, xoff float64, yoff float64
 }
 func (gw *GOGLFWindow) closeCallback(w *glfw.Window) {
 	Lock()
+	defer Unlock()
+
 	gw.Window.MakeContextCurrent()
 	gw.on_window_closing_func(gw)
-	Unlock()
 }
 
 func (gw *GOGLFWindow) clearDrawScreen() {
 	wrapper.ClearColor(gw.background_color.R, gw.background_color.G, gw.background_color.B, gw.background_color.A)
 	wrapper.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+}
+
+func (gw *GOGLFWindow) IsHidden() bool {
+	return gw.is_hidden
+}
+func (gw *GOGLFWindow) ShowWindow() {
+	gw.Window.Show()
+	gw.is_hidden = false
+}
+func (gw *GOGLFWindow) HideWindow() {
+	gw.Window.Hide()
+	gw.is_hidden = true
 }
 
 func (gw *GOGLFWindow) SetBackgroundColor(color coloru8.ColorU8) {
@@ -198,10 +216,11 @@ func (gw *GOGLFWindow) resetScrollVols() {
 
 func (gw *GOGLFWindow) InLoop() {
 	Lock()
+	defer Unlock()
+
 	gw.Window.MakeContextCurrent()
 	gw.display()
 	gw.Window.SwapBuffers()
-	Unlock()
 }
 
 func (gw *GOGLFWindow) GetKeyPressingCount(k glfw.Key) int {
