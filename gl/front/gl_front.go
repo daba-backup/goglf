@@ -1,7 +1,6 @@
 package front
 
 import (
-	"errors"
 	"log"
 
 	"github.com/dabasan/goglf/gl/shader"
@@ -10,41 +9,30 @@ import (
 	"github.com/go-gl/gl/all-core/gl"
 )
 
-func Initialize() error {
-	err := loadDefaultShaders()
-	if err != nil {
-		return err
-	}
-
+func Initialize() {
+	loadDefaultShaders()
 	setDefaultProperties()
 	addProgramsToFront()
-
-	return nil
 }
-func loadDefaultShaders() error {
-	r1 := shader.CreateProgram(
+func loadDefaultShaders() {
+	shader.CreateProgram(
 		"texture",
 		"./Data/Shader/330/texture/gouraud/vshader.glsl",
 		"./Data/Shader/330/texture/gouraud/fshader.glsl")
-	r2 := shader.CreateProgram(
+	shader.CreateProgram(
 		"color",
 		"./Data/Shader/330/color/vshader.glsl",
 		"./Data/Shader/330/color/fshader.glsl")
-	r3 := shader.CreateProgram(
+	shader.CreateProgram(
 		"texture_drawer",
 		"./Data/Shader/330/texture_drawer/vshader.glsl",
 		"./Data/Shader/330/texture_drawer/fshader.glsl")
-	r4 := shader.CreateProgram(
+	shader.CreateProgram(
 		"simple_2d",
 		"./Data/Shader/330/simple_2d/vshader.glsl",
 		"./Data/Shader/330/simple_2d/fshader.glsl")
 
-	if r1 != 0 || r2 != 0 || r3 != 0 || r4 != 0 {
-		return errors.New("Failed to create a program(s).")
-	}
-
 	log.Printf("info: Default shaders loaded.")
-	return nil
 }
 func setDefaultProperties() {
 	wrapper.Enable(gl.DEPTH_TEST)

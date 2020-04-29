@@ -56,9 +56,7 @@ func NewGOGLFWindow(width int, height int, title string) (*GOGLFWindow, error) {
 	}
 	log.Printf("info: OpenGL version=%v", gl.GoStr(gl.GetString(gl.VERSION)))
 
-	if err := front.Initialize(); err != nil {
-		return nil, err
-	}
+	front.Initialize()
 
 	window.SetKeyCallback(gw.keyCallback)
 	window.SetMouseButtonCallback(gw.mouseButtonCallback)
