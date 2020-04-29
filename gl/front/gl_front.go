@@ -40,7 +40,6 @@ func loadDefaultShaders() error {
 		"./Data/Shader/330/simple_2d/fshader.glsl")
 
 	if r1 != 0 || r2 != 0 || r3 != 0 || r4 != 0 {
-		log.Printf("error: Failed to create a program(s).")
 		return errors.New("Failed to create a program(s).")
 	}
 
