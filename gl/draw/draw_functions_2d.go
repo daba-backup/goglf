@@ -34,6 +34,17 @@ func InitializeDrawFunctions2D() {
 	texture_drawer_program.Disable()
 }
 
+func SetSimple2DZ(z float32) {
+	simple_2d_program.Enable()
+	simple_2d_program.SetUniform1f("z", z)
+	simple_2d_program.Disable()
+}
+func SetTextureDrawerZ(z float32) {
+	texture_drawer_program.Enable()
+	texture_drawer_program.SetUniform1f("z", z)
+	texture_drawer_program.Disable()
+}
+
 func SetWindowSize(width int, height int) {
 	window_width = width
 	window_height = height
