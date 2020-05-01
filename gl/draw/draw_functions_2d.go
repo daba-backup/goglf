@@ -56,7 +56,7 @@ func DrawTexture(
 	bottom_right_u float32, bottom_right_v float32,
 	top_right_u float32, top_right_v float32,
 	top_left_u float32, top_left_v float32) int {
-	indices_buffer := make([]int32, 6)
+	indices_buffer := make([]uint32, 6)
 	pos_buffer := make([]float32, 8)
 	uv_buffer := make([]float32, 8)
 
