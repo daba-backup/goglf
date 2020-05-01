@@ -3,6 +3,8 @@ package window
 import (
 	"log"
 
+	"github.com/dabasan/goglf/gl/texture"
+
 	"github.com/dabasan/go-dh3dbasis/coloru8"
 	"github.com/dabasan/go-dh3dbasis/vector"
 	"github.com/dabasan/goglf/gl/draw"
@@ -14,6 +16,7 @@ import (
 )
 
 type OnWindowClosingFunc func(gw *GOGLFWindow)
+type InitFunc func(gw *GOGLFWindow)
 type UpdateFunc func(gw *GOGLFWindow)
 type DrawFunc func(gw *GOGLFWindow)
 
@@ -39,7 +42,7 @@ type GOGLFWindow struct {
 	user_data interface{}
 }
 
-func NewGOGLFWindow(width int, height int, title string) (*GOGLFWindow, error) {
+func NewGOGLFWindow(width int, height int, title string, init_func InitFunc) (*GOGLFWindow, error) {
 	Lock()
 	defer Unlock()
 
@@ -78,6 +81,10 @@ func NewGOGLFWindow(width int, height int, title string) (*GOGLFWindow, error) {
 	gw.draw_func = Draw
 
 	gw.background_color = coloru8.GetColorU8FromFloat32Components(0.0, 0.0, 0.0, 1.0)
+
+	if init_func != nil {
+		init_func(gw)
+	}
 
 	return gw, nil
 }
@@ -205,7 +212,9 @@ func (gw *GOGLFWindow) updateAspect() {
 	width, height := gw.Window.GetSize()
 
 	wrapper.Viewport(0, 0, int32(width), int32(height))
+
 	front.UpdateCameraAspect(width, height)
+	texture.SetWindowSize(width, height)
 }
 func (gw *GOGLFWindow) resetScrollVols() {
 	gw.scroll_x = 0.0
@@ -261,6 +270,9 @@ func (gw *GOGLFWindow) GetScrollVols() (float64, float64) {
 }
 
 func OnWindowClosing(gw *GOGLFWindow) {
+
+}
+func Init(gw *GOGLFWindow) {
 
 }
 func Update(gw *GOGLFWindow) {
