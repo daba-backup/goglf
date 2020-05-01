@@ -28,27 +28,6 @@ func init() {
 	generate_mipmap_flag = true
 }
 
-func NewTexture() *Texture {
-	t := new(Texture)
-
-	var texture_object uint32
-	wrapper.GenTextures(1, &texture_object)
-	wrapper.BindTexture(gl.TEXTURE_2D, texture_object)
-	wrapper.TexParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT)
-	wrapper.TexParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT)
-	if generate_mipmap_flag == true {
-		wrapper.GenerateMipmap(gl.TEXTURE_2D)
-		wrapper.TexParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST_MIPMAP_NEAREST)
-	} else {
-		wrapper.TexParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST)
-	}
-	wrapper.BindTexture(gl.TEXTURE_2D, 0)
-
-	t.object = texture_object
-
-	return t
-}
-
 func Initialize() {
 	default_texture_handle = LoadTexture("./Data/Texture/white.bmp")
 	log.Printf("info: TextureMgr initialized.")
@@ -61,13 +40,29 @@ func LoadTexture(filename string) int {
 		return -1
 	}
 
-	texture := NewTexture()
-	texture.width = int32(rgba.Rect.Size().X)
-	texture.height = int32(rgba.Rect.Size().Y)
+	var texture_object uint32
+	texture_width := int32(rgba.Rect.Size().X)
+	texture_height := int32(rgba.Rect.Size().Y)
 
-	wrapper.BindTexture(gl.TEXTURE_2D, texture.object)
-	wrapper.TexImage2D(gl.TEXTURE_2D, 0, gl.SRGB_ALPHA, texture.width, texture.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, gl.Ptr(rgba.Pix))
+	wrapper.GenTextures(1, &texture_object)
+	wrapper.BindTexture(gl.TEXTURE_2D, texture_object)
+	wrapper.TexParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT)
+	wrapper.TexParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT)
+	wrapper.TexImage2D(gl.TEXTURE_2D, 0, gl.SRGB_ALPHA,
+		texture_width, texture_height, 0, gl.RGBA, gl.UNSIGNED_BYTE, gl.Ptr(rgba.Pix))
+	if generate_mipmap_flag == true {
+		wrapper.GenerateMipmap(gl.TEXTURE_2D)
+		wrapper.TexParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST_MIPMAP_NEAREST)
+	} else {
+		wrapper.TexParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST)
+	}
+	wrapper.TexParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST)
 	wrapper.BindTexture(gl.TEXTURE_2D, 0)
+
+	texture := new(Texture)
+	texture.object = texture_object
+	texture.width = texture_width
+	texture.height = texture_height
 
 	texture_handle := count
 	textures_map[texture_handle] = texture
