@@ -3,6 +3,8 @@ package shader
 import (
 	"log"
 
+	"github.com/dabasan/goglf/gl/texture"
+
 	"github.com/dabasan/go-dh3dbasis/coloru8"
 	"github.com/dabasan/go-dh3dbasis/matrix"
 	"github.com/dabasan/go-dh3dbasis/vector"
@@ -183,6 +185,23 @@ func (p *ShaderProgram) SetUniformMatrix(name string, transpose bool, value matr
 	}
 
 	wrapper.UniformMatrix4fv(location, 1, transpose, &value.M[0][0])
+
+	return 0
+}
+
+func (p *ShaderProgram) SetTexture(name string, texture_unit int, texture_handle int) int {
+	location := wrapper.GetUniformLocation(p.program_id, gl.Str(name+"\x00"))
+	if location < 0 {
+		if p.logging_enabled_flag == true {
+			log.Printf("trace: (%v) Invalid uniform name. name=%v", p.program_name, name)
+		}
+		return -1
+	}
+
+	wrapper.ActiveTexture(gl.TEXTURE0 + texture_unit)
+	texture.BindTexture(texture_handle)
+	wrapper.Uniform1i(location, texture_unit)
+	texture.UnbindTexture()
 
 	return 0
 }
