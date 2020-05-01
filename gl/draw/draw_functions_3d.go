@@ -16,8 +16,8 @@ var color_program *shader.ShaderProgram
 var texture_program *shader.ShaderProgram
 
 func InitializeDrawFunctions3D() {
-	color_program := shader.NewShaderProgram("color")
-	texture_program := shader.NewShaderProgram("texture")
+	color_program, _ := shader.NewShaderProgram("color")
+	texture_program, _ := shader.NewShaderProgram("texture")
 }
 
 func DrawLine3D(

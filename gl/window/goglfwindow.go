@@ -3,8 +3,6 @@ package window
 import (
 	"log"
 
-	"github.com/dabasan/goglf/gl/texture"
-
 	"github.com/dabasan/go-dh3dbasis/coloru8"
 	"github.com/dabasan/go-dh3dbasis/vector"
 	"github.com/dabasan/goglf/gl/draw"
@@ -214,7 +212,7 @@ func (gw *GOGLFWindow) updateAspect() {
 	wrapper.Viewport(0, 0, int32(width), int32(height))
 
 	front.UpdateCameraAspect(width, height)
-	texture.SetWindowSize(width, height)
+	draw.SetWindowSize(width, height)
 }
 func (gw *GOGLFWindow) resetScrollVols() {
 	gw.scroll_x = 0.0

@@ -16,6 +16,7 @@ func Initialize() {
 	setDefaultProperties()
 	addProgramsToFront()
 
+	draw.InitializeDrawFunctions2D()
 	draw.InitializeDrawFunctions3D()
 	texture.Initialize()
 }
