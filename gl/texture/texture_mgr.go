@@ -166,23 +166,14 @@ func FlipTexture(texture_handle int, flip_vertically bool, flip_horizontally boo
 	return 0
 }
 
-func GetTextureWidth(texture_handle int) int32 {
+func GetTextureSize(texture_handle int) (int32, int32) {
 	texture, ok := textures_map[texture_handle]
 	if !ok {
 		log.Printf("warn: No such texture. texture_handle=%v", texture_handle)
-		return -1
+		return -1, -1
 	}
 
-	return texture.width
-}
-func GetTextureHeight(texture_handle int) int32 {
-	texture, ok := textures_map[texture_handle]
-	if !ok {
-		log.Printf("warn: No such texture. texture_handle=%v", texture_handle)
-		return -1
-	}
-
-	return texture.height
+	return texture.width, texture.height
 }
 
 func AssociateTexture(texture_object uint32, texture_width int32, texture_height int32) int {
