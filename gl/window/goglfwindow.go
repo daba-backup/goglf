@@ -13,10 +13,10 @@ import (
 	"github.com/dabasan/goglf/gl/front"
 )
 
-type OnWindowClosingFunc func(gw *GOGLFWindow)
 type InitFunc func(gw *GOGLFWindow)
 type UpdateFunc func(gw *GOGLFWindow)
 type DrawFunc func(gw *GOGLFWindow)
+type DisposeFunc func(gw *GOGLFWindow)
 
 type GOGLFWindow struct {
 	Window    *glfw.Window
@@ -31,9 +31,9 @@ type GOGLFWindow struct {
 	scroll_x          float64
 	scroll_y          float64
 
-	on_window_closing_func OnWindowClosingFunc
-	update_func            UpdateFunc
-	draw_func              DrawFunc
+	update_func  UpdateFunc
+	draw_func    DrawFunc
+	dispose_func DisposeFunc
 
 	background_color coloru8.ColorU8
 
@@ -74,7 +74,7 @@ func NewGOGLFWindow(width int, height int, title string, init_func InitFunc) (*G
 	gw.scroll_x = 0.0
 	gw.scroll_y = 0.0
 
-	gw.on_window_closing_func = OnWindowClosing
+	gw.dispose_func = Dispose
 	gw.update_func = Update
 	gw.draw_func = Draw
 
@@ -112,7 +112,7 @@ func (gw *GOGLFWindow) closeCallback(w *glfw.Window) {
 	defer Unlock()
 
 	gw.Window.MakeContextCurrent()
-	gw.on_window_closing_func(gw)
+	gw.dispose_func(gw)
 }
 
 func (gw *GOGLFWindow) clearDrawScreen() {
@@ -267,9 +267,6 @@ func (gw *GOGLFWindow) GetScrollVols() (float64, float64) {
 	return gw.scroll_x, gw.scroll_y
 }
 
-func OnWindowClosing(gw *GOGLFWindow) {
-
-}
 func Init(gw *GOGLFWindow) {
 
 }
@@ -280,13 +277,16 @@ func Update(gw *GOGLFWindow) {
 func Draw(gw *GOGLFWindow) {
 	draw.DrawAxes(100.0)
 }
+func Dispose(gw *GOGLFWindow) {
 
-func (gw *GOGLFWindow) SetOnWindowClosingFunc(f OnWindowClosingFunc) {
-	gw.on_window_closing_func = f
 }
+
 func (gw *GOGLFWindow) SetUpdateFunc(f UpdateFunc) {
 	gw.update_func = f
 }
 func (gw *GOGLFWindow) SetDrawFunc(f DrawFunc) {
 	gw.draw_func = f
+}
+func (gw *GOGLFWindow) SetDisposeFunc(f DisposeFunc) {
+	gw.dispose_func = f
 }
