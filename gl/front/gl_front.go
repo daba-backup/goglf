@@ -3,6 +3,7 @@ package front
 import (
 	"log"
 
+	"github.com/dabasan/goglf/gl/draw"
 	"github.com/dabasan/goglf/gl/shader"
 	"github.com/dabasan/goglf/gl/texture"
 	"github.com/dabasan/goglf/gl/wrapper"
@@ -15,6 +16,7 @@ func Initialize() {
 	setDefaultProperties()
 	addProgramsToFront()
 
+	draw.InitializeDrawFunctions3D()
 	texture.Initialize()
 }
 func loadDefaultShaders() {
