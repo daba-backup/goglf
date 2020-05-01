@@ -32,8 +32,6 @@ func init() {
 	textures_map = make(map[int]*Texture)
 	count = 0
 
-	default_texture_handle = LoadTexture("./Data/Texture/white.bmp")
-
 	generate_mipmap_flag = true
 
 	window_width = common.WINDOW_DEFAULT_WIDTH
@@ -59,6 +57,12 @@ func NewTexture() *Texture {
 	t.object = texture_object
 
 	return t
+}
+
+func Initialize() {
+	default_texture_handle = LoadTexture("./Data/Texture/white.bmp")
+
+	log.Printf("info: TextureMgr initialized.")
 }
 
 func LoadTexture(filename string) int {
@@ -289,8 +293,8 @@ func DrawTexture(
 	//Bottom right
 	pos_buffer[2] = normalized_x + normalized_width
 	pos_buffer[3] = normalized_y
-	uv_buffer[2] = top_right_u
-	uv_buffer[3] = top_right_v
+	uv_buffer[2] = bottom_right_u
+	uv_buffer[3] = bottom_right_v
 	//Top right
 	pos_buffer[4] = normalized_x + normalized_width
 	pos_buffer[5] = normalized_y + normalized_height

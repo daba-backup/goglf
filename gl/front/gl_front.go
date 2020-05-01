@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/dabasan/goglf/gl/shader"
+	"github.com/dabasan/goglf/gl/texture"
 	"github.com/dabasan/goglf/gl/wrapper"
 
 	"github.com/go-gl/gl/all-core/gl"
@@ -13,6 +14,8 @@ func Initialize() {
 	loadDefaultShaders()
 	setDefaultProperties()
 	addProgramsToFront()
+
+	texture.Initialize()
 }
 func loadDefaultShaders() {
 	shader.CreateProgram(
