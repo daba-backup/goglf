@@ -33,6 +33,25 @@ func NewShaderProgram(program_name string) (*ShaderProgram, bool) {
 
 	return program, true
 }
+func NewShaderProgram_Create(
+	program_name string,
+	vertex_shader_filename string,
+	fragment_shader_filename string) (*ShaderProgram, bool) {
+	CreateProgram(program_name, vertex_shader_filename, fragment_shader_filename)
+
+	program := new(ShaderProgram)
+	program.program_name = program_name
+	program.logging_enabled_flag = false
+
+	program_id, ok := GetProgramID(program_name)
+	if ok == false {
+		log.Printf("warn: This program is invalid. program_name=%v", program_name)
+		return program, false
+	}
+	program.program_id = program_id
+
+	return program, true
+}
 
 func (p *ShaderProgram) EnableLogging(flag bool) {
 	p.logging_enabled_flag = flag
