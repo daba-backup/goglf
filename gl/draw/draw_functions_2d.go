@@ -23,12 +23,12 @@ func init() {
 }
 
 func InitializeDrawFunctions2D() {
-	simple_2d_program, _ := shader.NewShaderProgram("simple_2d")
+	simple_2d_program, _ = shader.NewShaderProgram("simple_2d")
 	simple_2d_program.Enable()
 	simple_2d_program.SetUniform1f("z", 0.0)
 	simple_2d_program.Disable()
 
-	texture_drawer_program, _ := shader.NewShaderProgram("texture_drawer")
+	texture_drawer_program, _ = shader.NewShaderProgram("texture_drawer")
 	texture_drawer_program.Enable()
 	texture_drawer_program.SetUniform1f("z", 0.0)
 	texture_drawer_program.Disable()
@@ -45,16 +45,16 @@ func DrawTexture(
 	bottom_right_u float32, bottom_right_v float32,
 	top_right_u float32, top_right_v float32,
 	top_left_u float32, top_left_v float32) int {
-	indices := make([]int32, 6)
+	indices_buffer := make([]int32, 6)
 	pos_buffer := make([]float32, 8)
 	uv_buffer := make([]float32, 8)
 
-	indices[0] = 0
-	indices[1] = 1
-	indices[2] = 2
-	indices[3] = 2
-	indices[4] = 3
-	indices[5] = 0
+	indices_buffer[0] = 0
+	indices_buffer[1] = 1
+	indices_buffer[2] = 2
+	indices_buffer[3] = 2
+	indices_buffer[4] = 3
+	indices_buffer[5] = 0
 
 	normalized_x := 2.0*float32(x)/float32(window_width) - 1.0
 	normalized_y := 2.0*float32(y)/float32(window_height) - 1.0
@@ -103,7 +103,7 @@ func DrawTexture(
 
 	wrapper.BindBuffer(gl.ELEMENT_ARRAY_BUFFER, indices_vbo)
 	wrapper.BufferData(gl.ELEMENT_ARRAY_BUFFER,
-		wrapper.SIZEOF_INT*len(indices), unsafe.Pointer(&indices[0]), gl.STATIC_DRAW)
+		wrapper.SIZEOF_INT*len(indices_buffer), unsafe.Pointer(&indices_buffer[0]), gl.STATIC_DRAW)
 
 	wrapper.BindBuffer(gl.ARRAY_BUFFER, pos_vbo)
 	wrapper.EnableVertexAttribArray(0)
@@ -116,10 +116,10 @@ func DrawTexture(
 	wrapper.BindBuffer(gl.ARRAY_BUFFER, 0)
 
 	wrapper.Enable(gl.BLEND)
-	texture_program.Enable()
-	texture_program.SetTexture("texture_sampler", 0, texture_handle)
+	texture_drawer_program.Enable()
+	texture_drawer_program.SetTexture("texture_sampler", 0, texture_handle)
 	wrapper.DrawElements(gl.TRIANGLES, 6, gl.UNSIGNED_INT, nil)
-	texture_program.Disable()
+	texture_drawer_program.Disable()
 	wrapper.Disable(gl.BLEND)
 
 	wrapper.BindVertexArray(0)

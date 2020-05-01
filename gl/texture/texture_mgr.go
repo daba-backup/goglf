@@ -51,7 +51,6 @@ func NewTexture() *Texture {
 
 func Initialize() {
 	default_texture_handle = LoadTexture("./Data/Texture/white.bmp")
-
 	log.Printf("info: TextureMgr initialized.")
 }
 
