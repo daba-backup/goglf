@@ -12,6 +12,14 @@ import (
 	"github.com/dabasan/goglf/gl/wrapper"
 )
 
+var color_program *shader.ShaderProgram
+var texture_program *shader.ShaderProgram
+
+func InitializeDrawFunctions3D() {
+	color_program := shader.NewShaderProgram("color")
+	texture_program := shader.NewShaderProgram("texture")
+}
+
 func DrawLine3D(
 	line_pos_1 vector.Vector, line_pos_2 vector.Vector,
 	color_1 coloru8.ColorU8, color_2 coloru8.ColorU8) {
@@ -35,8 +43,6 @@ func DrawLine3D(
 	color_buffer[5] = color_2.G
 	color_buffer[6] = color_2.B
 	color_buffer[7] = color_2.A
-
-	shader.UseProgram("color")
 
 	wrapper.GenBuffers(1, &pos_vbo)
 	wrapper.GenBuffers(1, &color_vbo)
@@ -67,7 +73,9 @@ func DrawLine3D(
 	//Draw
 	wrapper.BindVertexArray(vao)
 	wrapper.Enable(gl.BLEND)
+	color_program.Enable()
 	wrapper.DrawArrays(gl.LINES, 0, 2)
+	color_program.Disable()
 	wrapper.Disable(gl.BLEND)
 	wrapper.BindVertexArray(0)
 
@@ -143,8 +151,6 @@ func DrawTriangle3D(triangle *shape.Triangle) {
 		color_buffer[i*4+3] = dif.A
 	}
 
-	shader.UseProgram("color")
-
 	wrapper.GenBuffers(1, &pos_vbo)
 	wrapper.GenBuffers(1, &color_vbo)
 
@@ -174,7 +180,9 @@ func DrawTriangle3D(triangle *shape.Triangle) {
 	//Draw
 	wrapper.BindVertexArray(vao)
 	wrapper.Enable(gl.BLEND)
+	color_program.Enable()
 	wrapper.DrawArrays(gl.LINE_LOOP, 0, 3)
+	color_program.Disable()
 	wrapper.Disable(gl.BLEND)
 	wrapper.BindVertexArray(0)
 
@@ -215,8 +223,6 @@ func DrawQuadrangle3D(quadrangle *shape.Quadrangle) {
 		color_buffer[i*4+3] = dif.A
 	}
 
-	shader.UseProgram("color")
-
 	wrapper.GenBuffers(1, &pos_vbo)
 	wrapper.GenBuffers(1, &color_vbo)
 
@@ -246,7 +252,9 @@ func DrawQuadrangle3D(quadrangle *shape.Quadrangle) {
 	//Draw
 	wrapper.BindVertexArray(vao)
 	wrapper.Enable(gl.BLEND)
+	color_program.Enable()
 	wrapper.DrawArrays(gl.LINE_LOOP, 0, 4)
+	color_program.Disable()
 	wrapper.Disable(gl.BLEND)
 	wrapper.BindVertexArray(0)
 
