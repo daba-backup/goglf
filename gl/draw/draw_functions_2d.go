@@ -25,12 +25,12 @@ func init() {
 func InitializeDrawFunctions2D() {
 	simple_2d_program, _ = shader.NewShaderProgram("simple_2d")
 	simple_2d_program.Enable()
-	simple_2d_program.SetUniform1f("z", 0.0)
+	simple_2d_program.SetUniform1f("z", -1.0)
 	simple_2d_program.Disable()
 
 	texture_drawer_program, _ = shader.NewShaderProgram("texture_drawer")
 	texture_drawer_program.Enable()
-	texture_drawer_program.SetUniform1f("z", 0.0)
+	texture_drawer_program.SetUniform1f("z", -1.0)
 	texture_drawer_program.Disable()
 }
 
