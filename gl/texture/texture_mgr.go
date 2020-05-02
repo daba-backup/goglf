@@ -48,7 +48,7 @@ func LoadTexture(filename string) int {
 	wrapper.BindTexture(gl.TEXTURE_2D, texture_object)
 	wrapper.TexParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT)
 	wrapper.TexParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT)
-	wrapper.TexImage2D(gl.TEXTURE_2D, 0, gl.SRGB_ALPHA,
+	wrapper.TexImage2D(gl.TEXTURE_2D, 0, gl.RGBA,
 		texture_width, texture_height, 0, gl.RGBA, gl.UNSIGNED_BYTE, gl.Ptr(rgba.Pix))
 	if generate_mipmap_flag == true {
 		wrapper.GenerateMipmap(gl.TEXTURE_2D)
