@@ -1,7 +1,14 @@
 package model
 
 import (
+	"log"
 	"unsafe"
+
+	"github.com/dabasan/goglf/gl/shape"
+
+	"github.com/dabasan/go-dh3dbasis/vector"
+
+	"github.com/dabasan/go-dh3dbasis/matrix"
 
 	"github.com/dabasan/goglf/gl/texture"
 
@@ -106,8 +113,6 @@ func (m *ModelMgr) generateBuffers() {
 		uv_buffer := buffered_vertices.GetUVBuffer()
 		norm_buffer := buffered_vertices.GetNormBuffer()
 
-		texture_handle := buffered_vertices.GetTextureHandle()
-
 		//Flip UVs.
 		uv_buffer_len := len(uv_buffer)
 
@@ -155,11 +160,7 @@ func (m *ModelMgr) generateBuffers() {
 	}
 }
 func (m *ModelMgr) updateBuffers() {
-	element_num := len(m.buffered_vertices_list)
-
-	for i := 0; i < element_num; i++ {
-		buffered_vertices := m.buffered_vertices_list[i]
-
+	for i, buffered_vertices := range m.buffered_vertices_list {
 		pos_buffer := buffered_vertices.GetPosBuffer()
 		norm_buffer := buffered_vertices.GetNormBuffer()
 
@@ -199,17 +200,14 @@ func (m *ModelMgr) DeleteBuffers() {
 	}
 }
 
-func (m *ModelMgr) DrawWithProgram(program *shader.ShaderProgram, texture_unit int, sampler_name string) {
+func (m *ModelMgr) DrawWithProgram(program *shader.ShaderProgram, sampler_name string, texture_unit int) {
 	if m.property_updated_flag == true {
 		m.updateBuffers()
 	}
 
-	element_num_32 := len(m.buffered_vertices_list)
-
 	program.Enable()
 
-	for i := 0; i < element_num_32; i++ {
-		buffered_vertices := m.buffered_vertices_list[i]
+	for i, buffered_vertices := range m.buffered_vertices_list {
 		texture_handle := buffered_vertices.GetTextureHandle()
 		indices_count := buffered_vertices.GetIndicesCount()
 
@@ -225,4 +223,189 @@ func (m *ModelMgr) DrawWithProgram(program *shader.ShaderProgram, texture_unit i
 	}
 
 	program.Disable()
+}
+func (m *ModelMgr) Draw(sampler_name string, texture_unit int) {
+	for _, program := range m.programs {
+		m.DrawWithProgram(program, sampler_name, texture_unit)
+	}
+}
+func (m *ModelMgr) Draw_Simple() {
+	m.Draw("texture_sampler", 0)
+}
+
+func (m *ModelMgr) Transfer() {
+	if m.property_updated_flag == false {
+		m.updateBuffers()
+	}
+
+	for i, buffered_vertices := range m.buffered_vertices_list {
+		indices_count := buffered_vertices.GetIndicesCount()
+
+		wrapper.BindVertexArray(m.vao[i])
+
+		wrapper.Enable(gl.BLEND)
+		wrapper.DrawElements(gl.TRIANGLES, indices_count, gl.UNSIGNED_INT, nil)
+		wrapper.Disable(gl.BLEND)
+
+		wrapper.BindVertexArray(0)
+	}
+}
+
+func (m *ModelMgr) DrawElements(sampler_name string, texture_unit int, bound int) {
+	if m.property_updated_flag == false {
+		m.updateBuffers()
+	}
+
+	element_num := len(m.buffered_vertices_list)
+
+	var clamped_bound int
+	if bound < 0 {
+		clamped_bound = 0
+	} else if bound < element_num {
+		clamped_bound = bound
+	} else {
+		clamped_bound = element_num
+	}
+
+	for _, program := range m.programs {
+		program.Enable()
+
+		for i := 0; i < clamped_bound; i++ {
+			buffered_vertices := m.buffered_vertices_list[i]
+			texture_handle := buffered_vertices.GetTextureHandle()
+			indices_count := buffered_vertices.GetIndicesCount()
+
+			wrapper.BindVertexArray(m.vao[i])
+
+			program.SetTexture(sampler_name, texture_unit, texture_handle)
+
+			wrapper.Enable(gl.BLEND)
+			wrapper.DrawElements(gl.TRIANGLES, indices_count, gl.UNSIGNED_INT, nil)
+			wrapper.Disable(gl.BLEND)
+
+			wrapper.BindVertexArray(0)
+
+		}
+
+		program.Disable()
+	}
+}
+func (m *ModelMgr) DrawElements_Simple(bound int) {
+	m.DrawElements("texture_sampler", 0, bound)
+}
+
+func (m *ModelMgr) GetElementNum() int {
+	return len(m.buffered_vertices_list)
+}
+
+func (m *ModelMgr) SetMatrix(mat matrix.Matrix) {
+	for _, buffered_vertices := range m.buffered_vertices_list {
+		pos_buffer := buffered_vertices.GetPosBuffer()
+		norm_buffer := buffered_vertices.GetNormBuffer()
+
+		length := len(pos_buffer)
+		for i := 0; i < length; i += 3 {
+			//pos buffer
+			var pos vector.Vector
+			pos.X = pos_buffer[i]
+			pos.Y = pos_buffer[i+1]
+			pos.Z = pos_buffer[i+2]
+
+			pos = matrix.VTransform(pos, mat)
+
+			pos_buffer[i] = pos.X
+			pos_buffer[i+1] = pos.Y
+			pos_buffer[i+2] = pos.Z
+
+			//norm buffer
+			var norm vector.Vector
+			norm.X = norm_buffer[i]
+			norm.Y = norm_buffer[i+1]
+			norm.Z = norm_buffer[i+2]
+
+			norm = matrix.VTransformSR(norm, mat)
+			norm = vector.VNorm(norm)
+
+			norm_buffer[i] = norm.X
+			norm_buffer[i+1] = norm.Y
+			norm_buffer[i+2] = norm.Z
+		}
+
+		buffered_vertices.SetPosBuffer(pos_buffer)
+		buffered_vertices.SetNormBuffer(norm_buffer)
+	}
+
+	m.property_updated_flag = true
+}
+
+func (m *ModelMgr) ChangeTexture(material_index int, new_texture_handle int) int {
+	if !(0 <= material_index && material_index < len(m.buffered_vertices_list)) {
+		log.Printf("warn: Index out of bounds. material_index=%v", material_index)
+		return -1
+	}
+
+	buffered_vertices := m.buffered_vertices_list[material_index]
+	buffered_vertices.SetTextureHandle(new_texture_handle)
+
+	return 0
+}
+
+func (m *ModelMgr) GetFaces() []*shape.Triangle {
+	total_triangle_num := 0
+	for _, buffered_vertices := range m.buffered_vertices_list {
+		indices_count := buffered_vertices.GetIndicesCount()
+		triangle_num := indices_count / 9
+
+		total_triangle_num += int(triangle_num)
+	}
+
+	ret := make([]*shape.Triangle, total_triangle_num)
+	count := 0
+
+	for _, buffered_vertices := range m.buffered_vertices_list {
+		indices_buffer := buffered_vertices.GetIndicesBuffer()
+		pos_buffer := buffered_vertices.GetPosBuffer()
+		norm_buffer := buffered_vertices.GetNormBuffer()
+		uv_buffer := buffered_vertices.GetUVBuffer()
+
+		length := len(pos_buffer)
+		triangle_num := length / 9
+
+		for i := 0; i < triangle_num; i++ {
+			var triangle shape.Triangle
+
+			for j := 0; j < 3; j++ {
+				index := indices_buffer[i*3+j]
+
+				vec_base_index := index * 3
+				uv_base_index := index * 2
+
+				//pos buffer
+				var pos vector.Vector
+				pos.X = pos_buffer[vec_base_index]
+				pos.Y = pos_buffer[vec_base_index+1]
+				pos.Z = pos_buffer[vec_base_index+2]
+
+				//norm buffer
+				var norm vector.Vector
+				norm.X = norm_buffer[vec_base_index]
+				norm.Y = norm_buffer[vec_base_index+1]
+				norm.Z = norm_buffer[vec_base_index+2]
+
+				//uv buffer
+				u := uv_buffer[uv_base_index]
+				v := uv_buffer[uv_base_index+1]
+
+				triangle.Vertices[j].Pos = pos
+				triangle.Vertices[j].Norm = norm
+				triangle.Vertices[j].U = u
+				triangle.Vertices[j].V = v
+			}
+
+			ret[count] = &triangle
+			count++
+		}
+	}
+
+	return ret
 }
