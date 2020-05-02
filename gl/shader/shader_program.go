@@ -220,7 +220,6 @@ func (p *ShaderProgram) SetTexture(name string, texture_unit int, texture_handle
 	wrapper.ActiveTexture(uint32(gl.TEXTURE0 + texture_unit))
 	texture.BindTexture(texture_handle)
 	wrapper.Uniform1i(location, int32(texture_unit))
-	texture.UnbindTexture()
 
 	return 0
 }
