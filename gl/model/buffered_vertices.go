@@ -6,7 +6,7 @@ import (
 
 type BufferedVertices struct {
 	texture_handle int
-	indices_count  int
+	indices_count  int32
 
 	indices_buffer []uint32
 	pos_buffer     []float32
@@ -117,7 +117,7 @@ func (bv *BufferedVertices) SetTextureHandle(texture_handle int) {
 }
 func (bv *BufferedVertices) SetIndicesBuffer(indices_buffer []uint32) {
 	bv.indices_buffer = indices_buffer
-	bv.indices_count = len(indices_buffer)
+	bv.indices_count = int32(len(indices_buffer))
 }
 func (bv *BufferedVertices) SetPosBuffer(pos_buffer []float32) {
 	bv.pos_buffer = pos_buffer
@@ -147,8 +147,11 @@ func (bv *BufferedVertices) SetDiffuseTextureMap(diffuse_texture_map string) {
 func (bv *BufferedVertices) GetTextureHandle() int {
 	return bv.texture_handle
 }
-func (bv *BufferedVertices) GetIndicesCount() int {
+func (bv *BufferedVertices) GetIndicesCount() int32 {
 	return bv.indices_count
+}
+func (bv *BufferedVertices) GetIndicesBuffer() []uint32 {
+	return bv.indices_buffer
 }
 func (bv *BufferedVertices) GetPosBuffer() []float32 {
 	return bv.pos_buffer
