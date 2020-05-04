@@ -4,21 +4,20 @@ import (
 	"log"
 	"unsafe"
 
-	"github.com/dabasan/goglf/gl/shape"
-
+	"github.com/dabasan/go-dh3dbasis/matrix"
 	"github.com/dabasan/go-dh3dbasis/vector"
 
-	"github.com/dabasan/go-dh3dbasis/matrix"
-
-	"github.com/dabasan/goglf/gl/texture"
-
+	"github.com/dabasan/goglf/gl/model/buffer"
 	"github.com/dabasan/goglf/gl/shader"
+	"github.com/dabasan/goglf/gl/shape"
+	"github.com/dabasan/goglf/gl/texture"
 	"github.com/dabasan/goglf/gl/wrapper"
+
 	"github.com/go-gl/gl/all-core/gl"
 )
 
 type ModelMgr struct {
-	buffered_vertices_list []*BufferedVertices
+	buffered_vertices_list []*buffer.BufferedVertices
 
 	property_updated_flag bool
 
@@ -31,7 +30,7 @@ type ModelMgr struct {
 	programs []*shader.ShaderProgram
 }
 
-func NewModelMgr(buffered_vertices_list []*BufferedVertices) *ModelMgr {
+func NewModelMgr(buffered_vertices_list []*buffer.BufferedVertices) *ModelMgr {
 	model := new(ModelMgr)
 
 	model.buffered_vertices_list = buffered_vertices_list
@@ -59,13 +58,13 @@ func (m *ModelMgr) Interpolate(frame1 *ModelMgr, frame2 *ModelMgr, blend_ratio f
 	frame2_bv_list := frame2.buffered_vertices_list
 	element_num := len(frame1_bv_list)
 
-	interpolated_bv_list := make([]*BufferedVertices, element_num)
+	interpolated_bv_list := make([]*buffer.BufferedVertices, element_num)
 
 	for i := 0; i < element_num; i++ {
 		frame1_bv := frame1_bv_list[i]
 		frame2_bv := frame2_bv_list[i]
 
-		interpolated_bv := InterpolateBufferedVertices(frame1_bv, frame2_bv, blend_ratio)
+		interpolated_bv := buffer.Interpolate(frame1_bv, frame2_bv, blend_ratio)
 		interpolated_bv_list[i] = interpolated_bv
 	}
 
@@ -73,7 +72,7 @@ func (m *ModelMgr) Interpolate(frame1 *ModelMgr, frame2 *ModelMgr, blend_ratio f
 }
 
 func (m *ModelMgr) Copy() *ModelMgr {
-	copied_buffered_vertices_list := make([]*BufferedVertices, 0)
+	copied_buffered_vertices_list := make([]*buffer.BufferedVertices, 0)
 
 	for _, buffered_vertices := range m.buffered_vertices_list {
 		copied_buffered_vertices := buffered_vertices.Copy()
@@ -182,17 +181,12 @@ func (m *ModelMgr) updateBuffers() {
 
 func (m *ModelMgr) DeleteBuffers() {
 	element_num_32 := int32(len(m.buffered_vertices_list))
-	indices_vbo := m.indices_vbo
-	pos_vbo := m.pos_vbo
-	uv_vbo := m.uv_vbo
-	norm_vbo := m.norm_vbo
-	vao := m.vao
 
-	wrapper.DeleteBuffers(element_num_32, &indices_vbo[0])
-	wrapper.DeleteBuffers(element_num_32, &pos_vbo[0])
-	wrapper.DeleteBuffers(element_num_32, &uv_vbo[0])
-	wrapper.DeleteBuffers(element_num_32, &norm_vbo[0])
-	wrapper.DeleteBuffers(element_num_32, &vao[0])
+	wrapper.DeleteBuffers(element_num_32, &m.indices_vbo[0])
+	wrapper.DeleteBuffers(element_num_32, &m.pos_vbo[0])
+	wrapper.DeleteBuffers(element_num_32, &m.uv_vbo[0])
+	wrapper.DeleteBuffers(element_num_32, &m.norm_vbo[0])
+	wrapper.DeleteBuffers(element_num_32, &m.vao[0])
 
 	for _, buffered_vertices := range m.buffered_vertices_list {
 		texture_handle := buffered_vertices.GetTextureHandle()

@@ -1,4 +1,4 @@
-package model
+package buffer
 
 import (
 	"github.com/dabasan/go-dh3dbasis/coloru8"
@@ -70,7 +70,7 @@ func copyFloat32Slice(s []float32) []float32 {
 	return copied
 }
 
-func InterpolateBufferedVertices(bv1 *BufferedVertices, bv2 *BufferedVertices, blend_ratio float32) *BufferedVertices {
+func Interpolate(bv1 *BufferedVertices, bv2 *BufferedVertices, blend_ratio float32) *BufferedVertices {
 	interpolated := NewBufferedVertices()
 
 	interpolated.ambient_color = bv1.ambient_color

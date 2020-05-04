@@ -5,6 +5,6 @@ import (
 )
 
 type bd1Triangle struct {
-	Triangle   *shape.Triangle
+	Triangle   shape.Triangle
 	Texture_id int
 }
