@@ -52,7 +52,6 @@ func (t *bd1Triangulator) triangulateBlock(block *bd1Block) {
 			vertices[array_index].Spc = coloru8.GetColorU8FromFloat32Components(0.0, 0.0, 0.0, 0.0)
 			vertices[array_index].U = us[uv_index]
 			vertices[array_index].V = vs[uv_index] * (-1.0)
-
 			vertices[array_index].Norm = face_normal
 		}
 	}
@@ -101,6 +100,7 @@ func (t *bd1Triangulator) triangulateBlocks(blocks []*bd1Block) {
 func (t *bd1Triangulator) getTriangleList() []*bd1Triangle {
 	return t.triangles_list
 }
+
 func (t *bd1Triangulator) getTrianglesMap() map[int][]*bd1Triangle {
 	ret := make(map[int][]*bd1Triangle)
 
@@ -113,6 +113,8 @@ func (t *bd1Triangulator) getTrianglesMap() map[int][]*bd1Triangle {
 		}
 		triangles := ret[texture_id]
 		triangles = append(triangles, triangle)
+
+		ret[texture_id] = triangles
 	}
 
 	return ret

@@ -30,7 +30,7 @@ type ModelMgr struct {
 	programs []*shader.ShaderProgram
 }
 
-func NewModelMgr(buffered_vertices_list []*buffer.BufferedVertices) *ModelMgr {
+func NewModelMgr(buffered_vertices_list []*buffer.BufferedVertices, option FlipVOption) *ModelMgr {
 	model := new(ModelMgr)
 
 	model.buffered_vertices_list = buffered_vertices_list
@@ -41,7 +41,7 @@ func NewModelMgr(buffered_vertices_list []*buffer.BufferedVertices) *ModelMgr {
 	program, _ := shader.NewShaderProgram("texture")
 	model.programs[0] = program
 
-	model.generateBuffers()
+	model.generateBuffers(option)
 
 	return model
 }
@@ -79,12 +79,12 @@ func (m *ModelMgr) Copy() *ModelMgr {
 		copied_buffered_vertices_list = append(copied_buffered_vertices_list, copied_buffered_vertices)
 	}
 
-	copied_model := NewModelMgr(copied_buffered_vertices_list)
+	copied_model := NewModelMgr(copied_buffered_vertices_list, FLIP_V_NONE)
 
 	return copied_model
 }
 
-func (m *ModelMgr) generateBuffers() {
+func (m *ModelMgr) generateBuffers(option FlipVOption) {
 	element_num := len(m.buffered_vertices_list)
 	indices_vbo := make([]uint32, element_num)
 	pos_vbo := make([]uint32, element_num)
@@ -113,12 +113,14 @@ func (m *ModelMgr) generateBuffers() {
 		norm_buffer := buffered_vertices.GetNormBuffer()
 
 		//Flip UVs.
-		uv_buffer_len := len(uv_buffer)
+		if option == FLIP_V_ALL {
+			uv_buffer_len := len(uv_buffer)
 
-		for j := 0; j < uv_buffer_len; j += 2 {
-			v := uv_buffer[j+1]
-			v *= (-1.0)
-			uv_buffer[j+1] = v
+			for j := 0; j < uv_buffer_len; j += 2 {
+				v := uv_buffer[j+1]
+				v *= (-1.0)
+				uv_buffer[j+1] = v
+			}
 		}
 
 		wrapper.BindBuffer(gl.ARRAY_BUFFER, pos_vbo[i])

@@ -30,7 +30,9 @@ func SetKeepOrderIfPossible(a_keep_order_if_possible bool) {
 	keep_order_if_possible = a_keep_order_if_possible
 }
 
-func LoadModel(model_filename string) int {
+func LoadModel(model_filename string, option FlipVOption) int {
+	log.Printf("info: Start loading a model. model_filename=%v", model_filename)
+
 	extension := filename.GetFileExtension(model_filename)
 
 	model_handle := count
@@ -41,7 +43,7 @@ func LoadModel(model_filename string) int {
 		} else {
 			buffered_vertices_list = bd1.LoadBD1_KeepOrder(model_filename)
 		}
-		model := NewModelMgr(buffered_vertices_list)
+		model := NewModelMgr(buffered_vertices_list, option)
 
 		models_map[model_handle] = model
 	} else {

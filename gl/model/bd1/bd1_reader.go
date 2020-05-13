@@ -6,20 +6,20 @@ import (
 	"github.com/dabasan/go-dhtool/filename"
 )
 
-type bd1Parser struct {
+type bd1Reader struct {
 	texture_filenames_map map[int]string
 	blocks                []*bd1Block
 }
 
-func newBD1Parser() *bd1Parser {
-	p := new(bd1Parser)
+func newbd1Reader() *bd1Reader {
+	p := new(bd1Reader)
 	p.texture_filenames_map = make(map[int]string)
 	p.blocks = make([]*bd1Block, 0)
 
 	return p
 }
 
-func (p *bd1Parser) parse(bd1_filename string) error {
+func (p *bd1Reader) read(bd1_filename string) error {
 	bin, err := file.GetFileAllBin(bd1_filename)
 	if err != nil {
 		return err
@@ -53,41 +53,61 @@ func (p *bd1Parser) parse(bd1_filename string) error {
 	}
 
 	//Number of blocks
-	block_num := int(dhbyte.GetUint16ValueFromBin_LE(bin, pos))
+	block_num, err := dhbyte.GetUint16ValueFromBin_LE(bin, pos)
+	if err != nil {
+		return err
+	}
 	pos += 2
 
-	p.blocks = make([]*bd1Block, block_num)
+	i_block_num := int(block_num)
+	p.blocks = make([]*bd1Block, i_block_num)
 
 	//Blocks
-	for i := 0; i < block_num; i++ {
+	for i := 0; i < i_block_num; i++ {
 		var block bd1Block
 		var coordinate_temp float32
+		var err error
 
 		//Vertex positions
 		for j := 0; j < 8; j++ {
-			coordinate_temp = dhbyte.GetFloat32ValueFromBin_LE(bin, pos)
+			coordinate_temp, err = dhbyte.GetFloat32ValueFromBin_LE(bin, pos)
+			if err != nil {
+				return err
+			}
 			block.Vertex_positions[j].X = coordinate_temp
 			pos += 4
 		}
 		for j := 0; j < 8; j++ {
-			coordinate_temp = dhbyte.GetFloat32ValueFromBin_LE(bin, pos)
+			coordinate_temp, err = dhbyte.GetFloat32ValueFromBin_LE(bin, pos)
+			if err != nil {
+				return err
+			}
 			block.Vertex_positions[j].Y = coordinate_temp
 			pos += 4
 		}
 		for j := 0; j < 8; j++ {
-			coordinate_temp = dhbyte.GetFloat32ValueFromBin_LE(bin, pos)
+			coordinate_temp, err = dhbyte.GetFloat32ValueFromBin_LE(bin, pos)
+			if err != nil {
+				return err
+			}
 			block.Vertex_positions[j].Z = coordinate_temp
 			pos += 4
 		}
 
 		//UV coordinates
 		for j := 0; j < 24; j++ {
-			coordinate_temp = dhbyte.GetFloat32ValueFromBin_LE(bin, pos)
+			coordinate_temp, err = dhbyte.GetFloat32ValueFromBin_LE(bin, pos)
+			if err != nil {
+				return err
+			}
 			block.Us[j] = coordinate_temp
 			pos += 4
 		}
 		for j := 0; j < 24; j++ {
-			coordinate_temp = dhbyte.GetFloat32ValueFromBin_LE(bin, pos)
+			coordinate_temp, err = dhbyte.GetFloat32ValueFromBin_LE(bin, pos)
+			if err != nil {
+				return err
+			}
 			block.Vs[j] = coordinate_temp
 			pos += 4
 		}
@@ -114,9 +134,9 @@ func (p *bd1Parser) parse(bd1_filename string) error {
 	return nil
 }
 
-func (p *bd1Parser) getTextureFilenames() map[int]string {
+func (p *bd1Reader) getTextureFilenames() map[int]string {
 	return p.texture_filenames_map
 }
-func (p *bd1Parser) getBlocks() []*bd1Block {
+func (p *bd1Reader) getBlocks() []*bd1Block {
 	return p.blocks
 }

@@ -67,15 +67,15 @@ func getFaceCorrespondingUVIndices(face_index int) []int {
 		ret[2] = 15
 		ret[3] = 14
 	case 4:
-		ret[0] = 3
-		ret[1] = 2
-		ret[2] = 6
-		ret[3] = 7
-	case 5:
 		ret[0] = 17
 		ret[1] = 16
 		ret[2] = 19
 		ret[3] = 18
+	case 5:
+		ret[0] = 21
+		ret[1] = 20
+		ret[2] = 23
+		ret[3] = 22
 	default:
 		for i := 0; i < 4; i++ {
 			ret[i] = 0

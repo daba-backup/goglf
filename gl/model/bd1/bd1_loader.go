@@ -11,15 +11,15 @@ import (
 func LoadBD1(bd1_filename string) []*buffer.BufferedVertices {
 	ret := make([]*buffer.BufferedVertices, 0)
 
-	parser := newBD1Parser()
-	err := parser.parse(bd1_filename)
+	reader := newbd1Reader()
+	err := reader.read(bd1_filename)
 	if err != nil {
 		log.Printf("error: %v", err)
 		return ret
 	}
 
 	bd1_directory := filename.GetFileDirectory(bd1_filename)
-	texture_filenames := parser.getTextureFilenames()
+	texture_filenames := reader.getTextureFilenames()
 	texture_handles_map := make(map[int]int)
 	for texture_id, texture_filename := range texture_filenames {
 		if texture_filename == "" {
@@ -33,7 +33,7 @@ func LoadBD1(bd1_filename string) []*buffer.BufferedVertices {
 		texture_handles_map[texture_id] = texture_handle
 	}
 
-	blocks := parser.getBlocks()
+	blocks := reader.getBlocks()
 	invertZ(blocks)
 
 	triangulator := newBD1Triangulator()
@@ -74,7 +74,7 @@ func LoadBD1(bd1_filename string) []*buffer.BufferedVertices {
 				pos_buffer[vec_count+1] = position.Y
 				pos_buffer[vec_count+2] = position.Z
 				uv_buffer[uv_count] = u
-				uv_buffer[uv_count] = v
+				uv_buffer[uv_count+1] = v
 				norm_buffer[vec_count] = normal.X
 				norm_buffer[vec_count+1] = normal.Y
 				norm_buffer[vec_count+2] = normal.Z
@@ -99,15 +99,15 @@ func LoadBD1(bd1_filename string) []*buffer.BufferedVertices {
 func LoadBD1_KeepOrder(bd1_filename string) []*buffer.BufferedVertices {
 	ret := make([]*buffer.BufferedVertices, 0)
 
-	parser := newBD1Parser()
-	err := parser.parse(bd1_filename)
+	reader := newbd1Reader()
+	err := reader.read(bd1_filename)
 	if err != nil {
 		log.Printf("error: %v", err)
 		return ret
 	}
 
 	bd1_directory := filename.GetFileDirectory(bd1_filename)
-	texture_filenames := parser.getTextureFilenames()
+	texture_filenames := reader.getTextureFilenames()
 	texture_handles_map := make(map[int]int)
 	for texture_id, texture_filename := range texture_filenames {
 		if texture_filename == "" {
@@ -121,7 +121,7 @@ func LoadBD1_KeepOrder(bd1_filename string) []*buffer.BufferedVertices {
 		texture_handles_map[texture_id] = texture_handle
 	}
 
-	blocks := parser.getBlocks()
+	blocks := reader.getBlocks()
 	invertZ(blocks)
 
 	triangulator := newBD1Triangulator()
