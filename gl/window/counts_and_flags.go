@@ -23,6 +23,12 @@ func newKeyCountsAndFlags() *keyCountsAndFlags {
 
 	return ret
 }
+func (cf *keyCountsAndFlags) reset() {
+	cf.pressing_counts = make(map[glfw.Key]int)
+	cf.releasing_counts = make(map[glfw.Key]int)
+	cf.pressing_flags = make(map[glfw.Key]bool)
+}
+
 func newMouseButtonCountsAndFlags() *mouseButtonCountsAndFlags {
 	ret := new(mouseButtonCountsAndFlags)
 	ret.pressing_counts = make(map[glfw.MouseButton]int)
@@ -30,4 +36,9 @@ func newMouseButtonCountsAndFlags() *mouseButtonCountsAndFlags {
 	ret.pressing_flags = make(map[glfw.MouseButton]bool)
 
 	return ret
+}
+func (cf *mouseButtonCountsAndFlags) reset() {
+	cf.pressing_counts = make(map[glfw.MouseButton]int)
+	cf.releasing_counts = make(map[glfw.MouseButton]int)
+	cf.pressing_flags = make(map[glfw.MouseButton]bool)
 }

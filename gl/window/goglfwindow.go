@@ -19,7 +19,7 @@ type DrawFunc func(gw *GOGLFWindow)
 type DisposeFunc func(gw *GOGLFWindow)
 
 type GOGLFWindow struct {
-	Window    *glfw.Window
+	window    *glfw.Window
 	is_hidden bool
 
 	key_caf           *keyCountsAndFlags
@@ -63,7 +63,7 @@ func NewGOGLFWindow(width int, height int, title string, init_func InitFunc) (*G
 	window.SetMouseButtonCallback(gw.mouseButtonCallback)
 	window.SetScrollCallback(gw.scrollCallback)
 	window.SetCloseCallback(gw.closeCallback)
-	gw.Window = window
+	gw.window = window
 	gw.is_hidden = false
 
 	gw.key_caf = newKeyCountsAndFlags()
@@ -111,7 +111,7 @@ func (gw *GOGLFWindow) closeCallback(w *glfw.Window) {
 	Lock()
 	defer Unlock()
 
-	gw.Window.MakeContextCurrent()
+	gw.window.MakeContextCurrent()
 	gw.dispose_func(gw)
 }
 
@@ -120,15 +120,26 @@ func (gw *GOGLFWindow) clearDrawScreen() {
 	wrapper.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 }
 
+func (gw *GOGLFWindow) ResetKeyboardInputState() {
+	gw.key_caf.reset()
+}
+func (gw *GOGLFWindow) ResetMouseInputState() {
+	gw.mouse_button_caf.reset()
+}
+
+func (gw *GOGLFWindow) GetGLFWWinow() *glfw.Window {
+	return gw.window
+}
+
 func (gw *GOGLFWindow) IsHidden() bool {
 	return gw.is_hidden
 }
 func (gw *GOGLFWindow) ShowWindow() {
-	gw.Window.Show()
+	gw.window.Show()
 	gw.is_hidden = false
 }
 func (gw *GOGLFWindow) HideWindow() {
-	gw.Window.Hide()
+	gw.window.Hide()
 	gw.is_hidden = true
 }
 
@@ -200,14 +211,14 @@ func (gw *GOGLFWindow) updateMouseButtonCounts() {
 	}
 }
 func (gw *GOGLFWindow) updateCursorProperties() {
-	cursor_pos_x, cursor_pos_y := gw.Window.GetCursorPos()
+	cursor_pos_x, cursor_pos_y := gw.window.GetCursorPos()
 	gw.cursor_diff_x = cursor_pos_x - gw.last_cursor_pos_x
 	gw.cursor_diff_y = cursor_pos_y - gw.last_cursor_pos_y
 	gw.last_cursor_pos_x = cursor_pos_x
 	gw.last_cursor_pos_y = cursor_pos_y
 }
 func (gw *GOGLFWindow) updateAspect() {
-	width, height := gw.Window.GetSize()
+	width, height := gw.window.GetSize()
 
 	wrapper.Viewport(0, 0, int32(width), int32(height))
 
@@ -223,9 +234,9 @@ func (gw *GOGLFWindow) InLoop() {
 	Lock()
 	defer Unlock()
 
-	gw.Window.MakeContextCurrent()
+	gw.window.MakeContextCurrent()
 	gw.display()
-	gw.Window.SwapBuffers()
+	gw.window.SwapBuffers()
 }
 
 func (gw *GOGLFWindow) GetKeyPressingCount(k glfw.Key) int {
