@@ -82,7 +82,7 @@ func (c *FreeCamera) Translate(front int, back int, right int, left int) {
 		c.position = vector.VAdd(c.position, translate)
 	}
 }
-func (c *FreeCamera) Rotate(diff_x int, diff_y int) {
+func (c *FreeCamera) Rotate(diff_x float64, diff_y float64) {
 	c.h_rotate += c.rotate_speed * float32(-diff_x)
 	c.v_rotate += c.rotate_speed * float32(-diff_y)
 

@@ -4,7 +4,7 @@ import (
 	"github.com/go-gl/glfw/v3.3/glfw"
 )
 
-type keyCountsAndFlags struct {
+type keyboardCountsAndFlags struct {
 	pressing_counts  map[glfw.Key]int
 	releasing_counts map[glfw.Key]int
 	pressing_flags   map[glfw.Key]bool
@@ -15,15 +15,15 @@ type mouseButtonCountsAndFlags struct {
 	pressing_flags   map[glfw.MouseButton]bool
 }
 
-func newKeyCountsAndFlags() *keyCountsAndFlags {
-	ret := new(keyCountsAndFlags)
+func newkeyboardCountsAndFlags() *keyboardCountsAndFlags {
+	ret := new(keyboardCountsAndFlags)
 	ret.pressing_counts = make(map[glfw.Key]int)
 	ret.releasing_counts = make(map[glfw.Key]int)
 	ret.pressing_flags = make(map[glfw.Key]bool)
 
 	return ret
 }
-func (cf *keyCountsAndFlags) reset() {
+func (cf *keyboardCountsAndFlags) reset() {
 	cf.pressing_counts = make(map[glfw.Key]int)
 	cf.releasing_counts = make(map[glfw.Key]int)
 	cf.pressing_flags = make(map[glfw.Key]bool)

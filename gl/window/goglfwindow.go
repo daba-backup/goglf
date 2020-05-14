@@ -22,7 +22,7 @@ type GOGLFWindow struct {
 	window    *glfw.Window
 	is_hidden bool
 
-	key_caf           *keyCountsAndFlags
+	keyboard_caf      *keyboardCountsAndFlags
 	mouse_button_caf  *mouseButtonCountsAndFlags
 	last_cursor_pos_x float64
 	last_cursor_pos_y float64
@@ -66,7 +66,7 @@ func NewGOGLFWindow(width int, height int, title string, init_func InitFunc) (*G
 	gw.window = window
 	gw.is_hidden = false
 
-	gw.key_caf = newKeyCountsAndFlags()
+	gw.keyboard_caf = newkeyboardCountsAndFlags()
 	gw.mouse_button_caf = newMouseButtonCountsAndFlags()
 	gw.last_cursor_pos_x, gw.last_cursor_pos_y = window.GetCursorPos()
 	gw.cursor_diff_x = 0.0
@@ -90,9 +90,9 @@ func NewGOGLFWindow(width int, height int, title string, init_func InitFunc) (*G
 func (gw *GOGLFWindow) keyCallback(w *glfw.Window, k glfw.Key, s int, a glfw.Action, mk glfw.ModifierKey) {
 	switch a {
 	case glfw.Press:
-		gw.key_caf.pressing_flags[k] = true
+		gw.keyboard_caf.pressing_flags[k] = true
 	case glfw.Release:
-		gw.key_caf.pressing_flags[k] = false
+		gw.keyboard_caf.pressing_flags[k] = false
 	}
 }
 func (gw *GOGLFWindow) mouseButtonCallback(w *glfw.Window, b glfw.MouseButton, a glfw.Action, mk glfw.ModifierKey) {
@@ -121,7 +121,7 @@ func (gw *GOGLFWindow) clearDrawScreen() {
 }
 
 func (gw *GOGLFWindow) ResetKeyboardInputState() {
-	gw.key_caf.reset()
+	gw.keyboard_caf.reset()
 }
 func (gw *GOGLFWindow) ResetMouseInputState() {
 	gw.mouse_button_caf.reset()
@@ -175,20 +175,20 @@ func (gw *GOGLFWindow) display() {
 	gw.draw_func(gw) //User draw
 }
 func (gw *GOGLFWindow) updateKeyCounts() {
-	for key, val := range gw.key_caf.pressing_flags {
-		if _, ok := gw.key_caf.pressing_counts[key]; !ok {
-			gw.key_caf.pressing_counts[key] = 0
+	for key, val := range gw.keyboard_caf.pressing_flags {
+		if _, ok := gw.keyboard_caf.pressing_counts[key]; !ok {
+			gw.keyboard_caf.pressing_counts[key] = 0
 		}
-		if _, ok := gw.key_caf.releasing_counts[key]; !ok {
-			gw.key_caf.releasing_counts[key] = 0
+		if _, ok := gw.keyboard_caf.releasing_counts[key]; !ok {
+			gw.keyboard_caf.releasing_counts[key] = 0
 		}
 
 		if val == true {
-			gw.key_caf.pressing_counts[key]++
-			gw.key_caf.releasing_counts[key] = 0
+			gw.keyboard_caf.pressing_counts[key]++
+			gw.keyboard_caf.releasing_counts[key] = 0
 		} else {
-			gw.key_caf.releasing_counts[key]++
-			gw.key_caf.pressing_counts[key] = 0
+			gw.keyboard_caf.releasing_counts[key]++
+			gw.keyboard_caf.pressing_counts[key] = 0
 		}
 	}
 }
@@ -239,16 +239,16 @@ func (gw *GOGLFWindow) InLoop() {
 	gw.window.SwapBuffers()
 }
 
-func (gw *GOGLFWindow) GetKeyPressingCount(k glfw.Key) int {
-	val, ok := gw.key_caf.pressing_counts[k]
+func (gw *GOGLFWindow) GetKeyboardPressingCount(k glfw.Key) int {
+	val, ok := gw.keyboard_caf.pressing_counts[k]
 	if ok == false {
 		return 0
 	} else {
 		return val
 	}
 }
-func (gw *GOGLFWindow) GetkeyReleasingCount(k glfw.Key) int {
-	val, ok := gw.key_caf.releasing_counts[k]
+func (gw *GOGLFWindow) GetkeyboardReleasingCount(k glfw.Key) int {
+	val, ok := gw.keyboard_caf.releasing_counts[k]
 	if ok == false {
 		return 0
 	} else {
