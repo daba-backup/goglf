@@ -3,7 +3,7 @@ module github.com/dabasan/goglf/gl
 go 1.12
 
 require (
-	github.com/comail/colog v0.0.0-20160416085026-fba8e7b1f46c // indirect
+	github.com/comail/colog v0.0.0-20160416085026-fba8e7b1f46c
 	github.com/dabasan/go-dh3dbasis v0.0.0-20200425083144-fad120884b6e
 	github.com/dabasan/go-dhtool v0.0.0-20200512145248-62e8e38d38e3
 	github.com/go-gl/gl v0.0.0-20190320180904-bf2b1f2f34d7
