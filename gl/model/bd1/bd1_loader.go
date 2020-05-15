@@ -1,21 +1,18 @@
 package bd1
 
 import (
-	"log"
-
 	"github.com/dabasan/go-dhtool/filename"
 	"github.com/dabasan/goglf/gl/model/buffer"
 	"github.com/dabasan/goglf/gl/texture"
 )
 
-func LoadBD1(bd1_filename string) []*buffer.BufferedVertices {
+func LoadBD1(bd1_filename string) ([]*buffer.BufferedVertices, error) {
 	ret := make([]*buffer.BufferedVertices, 0)
 
 	reader := newbd1Reader()
 	err := reader.read(bd1_filename)
 	if err != nil {
-		log.Printf("error: %v", err)
-		return ret
+		return ret, err
 	}
 
 	bd1_directory := filename.GetFileDirectory(bd1_filename)
@@ -94,16 +91,15 @@ func LoadBD1(bd1_filename string) []*buffer.BufferedVertices {
 		ret = append(ret, buffered_vertices)
 	}
 
-	return ret
+	return ret, nil
 }
-func LoadBD1_KeepOrder(bd1_filename string) []*buffer.BufferedVertices {
+func LoadBD1_KeepOrder(bd1_filename string) ([]*buffer.BufferedVertices, error) {
 	ret := make([]*buffer.BufferedVertices, 0)
 
 	reader := newbd1Reader()
 	err := reader.read(bd1_filename)
 	if err != nil {
-		log.Printf("error: %v", err)
-		return ret
+		return ret, err
 	}
 
 	bd1_directory := filename.GetFileDirectory(bd1_filename)
@@ -178,5 +174,5 @@ func LoadBD1_KeepOrder(bd1_filename string) []*buffer.BufferedVertices {
 		ret = append(ret, buffered_vertices)
 	}
 
-	return ret
+	return ret, nil
 }

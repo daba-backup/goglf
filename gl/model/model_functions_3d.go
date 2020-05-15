@@ -2,6 +2,7 @@ package model
 
 import (
 	"log"
+	"strings"
 
 	"github.com/dabasan/go-dh3dbasis/matrix"
 	"github.com/dabasan/go-dh3dbasis/vector"
@@ -9,7 +10,6 @@ import (
 	"github.com/dabasan/go-dhtool/filename"
 
 	"github.com/dabasan/goglf/gl/model/bd1"
-	"github.com/dabasan/goglf/gl/model/buffer"
 	"github.com/dabasan/goglf/gl/shader"
 	"github.com/dabasan/goglf/gl/shape"
 )
@@ -34,27 +34,53 @@ func LoadModel(model_filename string, option FlipVOption) int {
 	log.Printf("info: Start loading a model. model_filename=%v", model_filename)
 
 	extension := filename.GetFileExtension(model_filename)
+	extension = strings.ToLower(extension)
 
-	model_handle := count
-	if extension == "bd1" || extension == "BD1" {
-		var buffered_vertices_list []*buffer.BufferedVertices
-		if keep_order_if_possible == false {
-			buffered_vertices_list = bd1.LoadBD1(model_filename)
+	var model *ModelMgr
+	var err error
+	if extension == "bd1" {
+		if keep_order_if_possible == true {
+			model, err = loadBD1_KeepOrder(model_filename, option)
 		} else {
-			buffered_vertices_list = bd1.LoadBD1_KeepOrder(model_filename)
+			model, err = loadBD1(model_filename, option)
 		}
-		model := NewModelMgr(buffered_vertices_list, option)
-
-		models_map[model_handle] = model
 	} else {
-		log.Printf("warn: Unsupported model format. extension=%v", extension)
+		log.Printf("error: Unsupported model format. extension=%v", extension)
 		return -1
 	}
 
+	if err != nil {
+		log.Printf("error: Failed to load a model. model_filename=%v", model_filename)
+		return -1
+	}
+
+	model_handle := count
+	models_map[model_handle] = model
 	count++
 
 	return model_handle
 }
+func loadBD1(model_filename string, option FlipVOption) (*ModelMgr, error) {
+	buffered_vertices_list, err := bd1.LoadBD1(model_filename)
+
+	if err != nil {
+		return nil, err
+	}
+
+	model := NewModelMgr(buffered_vertices_list, option)
+	return model, nil
+}
+func loadBD1_KeepOrder(model_filename string, option FlipVOption) (*ModelMgr, error) {
+	buffered_vertices_list, err := bd1.LoadBD1_KeepOrder(model_filename)
+
+	if err != nil {
+		return nil, err
+	}
+
+	model := NewModelMgr(buffered_vertices_list, option)
+	return model, nil
+}
+
 func CopyModel(model_handle int) int {
 	model, ok := models_map[model_handle]
 	if !ok {
