@@ -86,9 +86,6 @@ func (m *ModelMgr) Copy() *ModelMgr {
 
 func (m *ModelMgr) generateBuffers(option FlipVOption) {
 	element_num := len(m.buffered_vertices_list)
-	if element_num == 0 {
-		return
-	}
 
 	indices_vbo := make([]uint32, element_num)
 	pos_vbo := make([]uint32, element_num)
