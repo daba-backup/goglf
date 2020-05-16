@@ -137,6 +137,9 @@ func (bv *BufferedVertices) SetDiffuseColor(diffuse_color coloru8.ColorU8) {
 func (bv *BufferedVertices) SetSpecularColor(specular_color coloru8.ColorU8) {
 	bv.specular_color = specular_color
 }
+func (bv *BufferedVertices) SetSpecularExponent(specular_exponent float32) {
+	bv.specular_exponent = specular_exponent
+}
 func (bv *BufferedVertices) SetDissolve(dissolve float32) {
 	bv.dissolve = dissolve
 }
