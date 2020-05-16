@@ -12,7 +12,7 @@ func LoadBD1(bd1_filename string) ([]*buffer.BufferedVertices, error) {
 	reader := newbd1Reader()
 	err := reader.read(bd1_filename)
 	if err != nil {
-		return ret, err
+		return nil, err
 	}
 
 	bd1_directory := filename.GetFileDirectory(bd1_filename)
