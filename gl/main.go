@@ -4,8 +4,6 @@ import (
 	"log"
 	"runtime"
 
-	"github.com/dabasan/go-dh3dbasis/vector"
-
 	"github.com/comail/colog"
 	"github.com/dabasan/goglf/gl/draw"
 	"github.com/dabasan/goglf/gl/model"
@@ -57,8 +55,7 @@ func main() {
 
 func inittestfunc(gw *window.GOGLFWindow) {
 	const SCALE = 1.7 / 20.0
-	model_handle := model.LoadModel("./Data/Model/BD1/map0/temp.bd1", model.FLIP_V_ALL)
-	model.RescaleModel(model_handle, vector.VGet(SCALE, SCALE, SCALE))
+	model_handle := model.LoadModel("./Data/Model/Teapot/teapot.obj", model.FLIP_V_ALL)
 
 	camera := util.NewFreeCamera()
 

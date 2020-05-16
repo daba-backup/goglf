@@ -10,6 +10,7 @@ import (
 	"github.com/dabasan/go-dhtool/filename"
 
 	"github.com/dabasan/goglf/gl/model/bd1"
+	"github.com/dabasan/goglf/gl/model/obj"
 	"github.com/dabasan/goglf/gl/shader"
 	"github.com/dabasan/goglf/gl/shape"
 )
@@ -38,19 +39,23 @@ func LoadModel(model_filename string, option FlipVOption) int {
 
 	var model *ModelMgr
 	var err error
-	if extension == "bd1" {
+	switch extension {
+	case "bd1":
 		if keep_order_if_possible == true {
 			model, err = loadBD1_KeepOrder(model_filename, option)
 		} else {
 			model, err = loadBD1(model_filename, option)
 		}
-	} else {
+	case "obj":
+		model, err = loadOBJ(model_filename, option)
+	default:
 		log.Printf("error: Unsupported model format. extension=%v", extension)
 		return -1
 	}
 
 	if err != nil {
 		log.Printf("error: Failed to load a model. model_filename=%v", model_filename)
+		log.Printf("error: %v", err)
 		return -1
 	}
 
@@ -62,7 +67,6 @@ func LoadModel(model_filename string, option FlipVOption) int {
 }
 func loadBD1(model_filename string, option FlipVOption) (*ModelMgr, error) {
 	buffered_vertices_list, err := bd1.LoadBD1(model_filename)
-
 	if err != nil {
 		return nil, err
 	}
@@ -72,7 +76,15 @@ func loadBD1(model_filename string, option FlipVOption) (*ModelMgr, error) {
 }
 func loadBD1_KeepOrder(model_filename string, option FlipVOption) (*ModelMgr, error) {
 	buffered_vertices_list, err := bd1.LoadBD1_KeepOrder(model_filename)
+	if err != nil {
+		return nil, err
+	}
 
+	model := NewModelMgr(buffered_vertices_list, option)
+	return model, nil
+}
+func loadOBJ(model_filename string, option FlipVOption) (*ModelMgr, error) {
+	buffered_vertices_list, err := obj.LoadOBJ(model_filename)
 	if err != nil {
 		return nil, err
 	}
@@ -84,7 +96,7 @@ func loadBD1_KeepOrder(model_filename string, option FlipVOption) (*ModelMgr, er
 func CopyModel(model_handle int) int {
 	model, ok := models_map[model_handle]
 	if !ok {
-		log.Print("trace: No such model. model_handle=%v", model_handle)
+		log.Printf("trace: No such model. model_handle=%v", model_handle)
 		return -1
 	}
 
@@ -100,7 +112,7 @@ func CopyModel(model_handle int) int {
 func DeleteModel(model_handle int) int {
 	model, ok := models_map[model_handle]
 	if !ok {
-		log.Print("trace: No such model. model_handle=%v", model_handle)
+		log.Printf("trace: No such model. model_handle=%v", model_handle)
 		return -1
 	}
 
@@ -125,7 +137,7 @@ func ModelExists(model_handle int) bool {
 func AddProgram(model_handle int, program *shader.ShaderProgram) int {
 	model, ok := models_map[model_handle]
 	if !ok {
-		log.Print("trace: No such model. model_handle=%v", model_handle)
+		log.Printf("trace: No such model. model_handle=%v", model_handle)
 		return -1
 	}
 
@@ -136,7 +148,7 @@ func AddProgram(model_handle int, program *shader.ShaderProgram) int {
 func RemoveAllPrograms(model_handle int) int {
 	model, ok := models_map[model_handle]
 	if !ok {
-		log.Print("trace: No such model. model_handle=%v", model_handle)
+		log.Printf("trace: No such model. model_handle=%v", model_handle)
 		return -1
 	}
 
@@ -147,7 +159,7 @@ func RemoveAllPrograms(model_handle int) int {
 func SetDefaultProgram(model_handle int) int {
 	model, ok := models_map[model_handle]
 	if !ok {
-		log.Print("trace: No such model. model_handle=%v", model_handle)
+		log.Printf("trace: No such model. model_handle=%v", model_handle)
 		return -1
 	}
 
@@ -162,7 +174,7 @@ func DrawModelWithProgram(model_handle int,
 	program *shader.ShaderProgram, sampler_name string, texture_unit int) int {
 	model, ok := models_map[model_handle]
 	if !ok {
-		log.Print("trace: No such model. model_handle=%v", model_handle)
+		log.Printf("trace: No such model. model_handle=%v", model_handle)
 		return -1
 	}
 
@@ -173,7 +185,7 @@ func DrawModelWithProgram(model_handle int,
 func DrawModel(model_handle int, sampler_name string, texture_unit int) int {
 	model, ok := models_map[model_handle]
 	if !ok {
-		log.Print("trace: No such model. model_handle=%v", model_handle)
+		log.Printf("trace: No such model. model_handle=%v", model_handle)
 		return -1
 	}
 
@@ -184,7 +196,7 @@ func DrawModel(model_handle int, sampler_name string, texture_unit int) int {
 func DrawModel_Simple(model_handle int) int {
 	model, ok := models_map[model_handle]
 	if !ok {
-		log.Print("trace: No such model. model_handle=%v", model_handle)
+		log.Printf("trace: No such model. model_handle=%v", model_handle)
 		return -1
 	}
 
@@ -195,7 +207,7 @@ func DrawModel_Simple(model_handle int) int {
 func TransferModel(model_handle int) int {
 	model, ok := models_map[model_handle]
 	if !ok {
-		log.Print("trace: No such model. model_handle=%v", model_handle)
+		log.Printf("trace: No such model. model_handle=%v", model_handle)
 		return -1
 	}
 
@@ -206,7 +218,7 @@ func TransferModel(model_handle int) int {
 func DrawModelElements(model_handle int, sampler_name string, texture_unit int, bound int) int {
 	model, ok := models_map[model_handle]
 	if !ok {
-		log.Print("trace: No such model. model_handle=%v", model_handle)
+		log.Printf("trace: No such model. model_handle=%v", model_handle)
 		return -1
 	}
 
@@ -217,7 +229,7 @@ func DrawModelElements(model_handle int, sampler_name string, texture_unit int, 
 func DrawModelElements_Simple(model_handle int, bound int) int {
 	model, ok := models_map[model_handle]
 	if !ok {
-		log.Print("trace: No such model. model_handle=%v", model_handle)
+		log.Printf("trace: No such model. model_handle=%v", model_handle)
 		return -1
 	}
 
@@ -229,7 +241,7 @@ func DrawModelElements_Simple(model_handle int, bound int) int {
 func GetModelElementNum(model_handle int) int {
 	model, ok := models_map[model_handle]
 	if !ok {
-		log.Print("trace: No such model. model_handle=%v", model_handle)
+		log.Printf("trace: No such model. model_handle=%v", model_handle)
 		return -1
 	}
 
@@ -240,7 +252,7 @@ func GetModelElementNum(model_handle int) int {
 func SetModelMatrix(model_handle int, m matrix.Matrix) int {
 	model, ok := models_map[model_handle]
 	if !ok {
-		log.Print("trace: No such model. model_handle=%v", model_handle)
+		log.Printf("trace: No such model. model_handle=%v", model_handle)
 		return -1
 	}
 
@@ -252,7 +264,7 @@ func SetModelMatrix(model_handle int, m matrix.Matrix) int {
 func TranslateModel(model_handle int, translate vector.Vector) int {
 	model, ok := models_map[model_handle]
 	if !ok {
-		log.Print("trace: No such model. model_handle=%v", model_handle)
+		log.Printf("trace: No such model. model_handle=%v", model_handle)
 		return -1
 	}
 
@@ -264,7 +276,7 @@ func TranslateModel(model_handle int, translate vector.Vector) int {
 func RotateModel(model_handle int, rotate vector.Vector) int {
 	model, ok := models_map[model_handle]
 	if !ok {
-		log.Print("trace: No such model. model_handle=%v", model_handle)
+		log.Printf("trace: No such model. model_handle=%v", model_handle)
 		return -1
 	}
 
@@ -281,7 +293,7 @@ func RotateModel(model_handle int, rotate vector.Vector) int {
 func RotateModelLocally(model_handle int, origin vector.Vector, rotate vector.Vector) int {
 	model, ok := models_map[model_handle]
 	if !ok {
-		log.Print("trace: No such model. model_handle=%v", model_handle)
+		log.Printf("trace: No such model. model_handle=%v", model_handle)
 		return -1
 	}
 
@@ -304,7 +316,7 @@ func RotateModelLocally(model_handle int, origin vector.Vector, rotate vector.Ve
 func RescaleModel(model_handle int, scale vector.Vector) int {
 	model, ok := models_map[model_handle]
 	if !ok {
-		log.Print("trace: No such model. model_handle=%v", model_handle)
+		log.Printf("trace: No such model. model_handle=%v", model_handle)
 		return -1
 	}
 
@@ -317,7 +329,7 @@ func RescaleModel(model_handle int, scale vector.Vector) int {
 func ChangeModelTexture(model_handle int, material_index int, new_texture_handle int) int {
 	model, ok := models_map[model_handle]
 	if !ok {
-		log.Print("trace: No such model. model_handle=%v", model_handle)
+		log.Printf("trace: No such model. model_handle=%v", model_handle)
 		return -1
 	}
 
@@ -331,11 +343,10 @@ func GetModelFaces(model_handle int) []*shape.Triangle {
 
 	model, ok := models_map[model_handle]
 	if !ok {
-		log.Print("trace: No such model. model_handle=%v", model_handle)
+		log.Printf("trace: No such model. model_handle=%v", model_handle)
 		return ret
 	}
 
 	ret = model.GetFaces()
-
 	return ret
 }

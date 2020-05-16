@@ -7,14 +7,12 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/dabasan/go-dh3dbasis/vector"
-
-	"github.com/dabasan/go-dhtool/filename"
-
-	"github.com/dabasan/go-dhtool/file"
-
 	"github.com/dabasan/go-dh3dbasis/coloru8"
+	"github.com/dabasan/go-dh3dbasis/vector"
+	"github.com/dabasan/go-dhtool/file"
+	"github.com/dabasan/go-dhtool/filename"
 	"github.com/dabasan/goglf/gl/model/buffer"
+	"github.com/dabasan/goglf/gl/texture"
 	gdfobj "github.com/mokiat/go-data-front/decoder/obj"
 )
 
@@ -69,6 +67,14 @@ func LoadOBJ(obj_filename string) ([]*buffer.BufferedVertices, error) {
 			buffered_vertices.SetSpecularExponent(material.Specular_exponent)
 			buffered_vertices.SetDissolve(material.Dissolve)
 			buffered_vertices.SetDiffuseTextureMap(material.Diffuse_texture_map)
+
+			if material.Diffuse_texture_map == "" {
+				buffered_vertices.SetTextureHandle(-1)
+			} else {
+				texture_filename := obj_directory + "/" + material.Diffuse_texture_map
+				texture_handle := texture.LoadTexture(texture_filename)
+				buffered_vertices.SetTextureHandle(texture_handle)
+			}
 
 			indices_buffer := make([]uint32, 0)
 			pos_buffer := make([]float32, 0)
@@ -184,7 +190,7 @@ func LoadMtl(mtl_filename string) ([]*Material, error) {
 			r_Kd := regexp.MustCompile("^Kd")
 			r_Ks := regexp.MustCompile("^Ks")
 			r_d := regexp.MustCompile("^d")
-			r_MapKd := regexp.MustCompile("^Map_Kd")
+			r_mapKd := regexp.MustCompile("^map_Kd")
 
 			if r_Ns.MatchString(lines[j]) {
 				Ns := strings.Fields(lines[j])[1]
@@ -248,9 +254,9 @@ func LoadMtl(mtl_filename string) ([]*Material, error) {
 				if err != nil {
 					return nil, err
 				}
-			} else if r_MapKd.MatchString(lines[j]) {
-				Map_Kd := strings.Fields(lines[j])[1]
-				material.Diffuse_texture_map = Map_Kd
+			} else if r_mapKd.MatchString(lines[j]) {
+				map_Kd := strings.Fields(lines[j])[1]
+				material.Diffuse_texture_map = map_Kd
 			}
 		}
 
