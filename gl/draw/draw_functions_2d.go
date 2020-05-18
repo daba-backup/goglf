@@ -120,6 +120,166 @@ func DrawLine2D(x1 int, y1 int, x2 int, y2 int, color coloru8.ColorU8) {
 	wrapper.DeleteVertexArrays(1, &vao)
 }
 
+func DrawRectangle2D(x1 int, y1 int, x2 int, y2 int, color coloru8.ColorU8) {
+	var pos_vbo uint32
+	var color_vbo uint32
+	var vao uint32
+
+	pos_buffer := make([]float32, 2*4)
+	color_buffer := make([]float32, 4*4)
+
+	normalized_x1 := coordinatetool.NormalizeCoordinate_Int(x1, window_width)
+	normalized_y1 := coordinatetool.NormalizeCoordinate_Int(y1, window_height)
+	normalized_x2 := coordinatetool.NormalizeCoordinate_Int(x2, window_width)
+	normalized_y2 := coordinatetool.NormalizeCoordinate_Int(y2, window_height)
+
+	pos_buffer[0] = normalized_x1
+	pos_buffer[1] = normalized_y1
+	pos_buffer[2] = normalized_x2
+	pos_buffer[3] = normalized_y1
+	pos_buffer[4] = normalized_x2
+	pos_buffer[5] = normalized_y2
+	pos_buffer[6] = normalized_x1
+	pos_buffer[7] = normalized_y2
+
+	for i := 0; i < 4; i++ {
+		color_buffer[i*4] = color.R
+		color_buffer[i*4+1] = color.G
+		color_buffer[i*4+2] = color.B
+		color_buffer[i*4+3] = color.A
+	}
+
+	wrapper.GenBuffers(1, &pos_vbo)
+	wrapper.GenBuffers(1, &color_vbo)
+
+	wrapper.BindBuffer(gl.ARRAY_BUFFER, pos_vbo)
+	wrapper.BufferData(gl.ARRAY_BUFFER,
+		wrapper.SIZEOF_FLOAT*len(pos_buffer), unsafe.Pointer(&pos_buffer[0]), gl.STATIC_DRAW)
+	wrapper.BindBuffer(gl.ARRAY_BUFFER, color_vbo)
+	wrapper.BufferData(gl.ARRAY_BUFFER,
+		wrapper.SIZEOF_FLOAT*len(color_buffer), unsafe.Pointer(&color_buffer[0]), gl.STATIC_DRAW)
+
+	wrapper.GenVertexArrays(1, &vao)
+	wrapper.BindVertexArray(vao)
+
+	//Position attribute
+	wrapper.BindBuffer(gl.ARRAY_BUFFER, pos_vbo)
+	wrapper.EnableVertexAttribArray(0)
+	wrapper.VertexAttribPointer(0, 2, gl.FLOAT, false, wrapper.SIZEOF_FLOAT*2, nil)
+
+	//Color attribute
+	wrapper.BindBuffer(gl.ARRAY_BUFFER, color_vbo)
+	wrapper.EnableVertexAttribArray(1)
+	wrapper.VertexAttribPointer(1, 4, gl.FLOAT, false, wrapper.SIZEOF_FLOAT*4, nil)
+
+	wrapper.BindBuffer(gl.ARRAY_BUFFER, 0)
+	wrapper.BindVertexArray(0)
+
+	//Draw
+	wrapper.BindVertexArray(vao)
+	wrapper.Enable(gl.BLEND)
+	simple_2d_program.Enable()
+	wrapper.DrawArrays(gl.LINE_LOOP, 0, 4)
+	simple_2d_program.Disable()
+	wrapper.Disable(gl.BLEND)
+	wrapper.BindVertexArray(0)
+
+	//Delete buffers
+	wrapper.DeleteBuffers(1, &pos_vbo)
+	wrapper.DeleteBuffers(1, &color_vbo)
+	wrapper.DeleteVertexArrays(1, &vao)
+}
+
+func DrawFilledRectangle2D(x1 int, y1 int, x2 int, y2 int, color coloru8.ColorU8) {
+	var indices_vbo uint32
+	var pos_vbo uint32
+	var color_vbo uint32
+	var vao uint32
+
+	pos_buffer := make([]float32, 2*4)
+	color_buffer := make([]float32, 4*4)
+
+	normalized_x1 := coordinatetool.NormalizeCoordinate_Int(x1, window_width)
+	normalized_y1 := coordinatetool.NormalizeCoordinate_Int(y1, window_height)
+	normalized_x2 := coordinatetool.NormalizeCoordinate_Int(x2, window_width)
+	normalized_y2 := coordinatetool.NormalizeCoordinate_Int(y2, window_height)
+
+	//Bottom left
+	pos_buffer[0] = normalized_x1
+	pos_buffer[1] = normalized_y1
+	//Bottom right
+	pos_buffer[2] = normalized_x2
+	pos_buffer[3] = normalized_y1
+	//Top right
+	pos_buffer[4] = normalized_x2
+	pos_buffer[5] = normalized_y2
+	//Top left
+	pos_buffer[6] = normalized_x1
+	pos_buffer[7] = normalized_y2
+
+	for i := 0; i < 4; i++ {
+		color_buffer[i*4] = color.R
+		color_buffer[i*4+1] = color.G
+		color_buffer[i*4+2] = color.B
+		color_buffer[i*4+3] = color.A
+	}
+
+	indices_buffer := make([]uint32, 3*2)
+	indices_buffer[0] = 0
+	indices_buffer[1] = 1
+	indices_buffer[2] = 2
+	indices_buffer[3] = 2
+	indices_buffer[4] = 3
+	indices_buffer[5] = 0
+
+	wrapper.GenBuffers(1, &indices_vbo)
+	wrapper.GenBuffers(1, &pos_vbo)
+	wrapper.GenBuffers(1, &color_vbo)
+
+	wrapper.BindBuffer(gl.ARRAY_BUFFER, pos_vbo)
+	wrapper.BufferData(gl.ARRAY_BUFFER,
+		wrapper.SIZEOF_FLOAT*len(pos_buffer), unsafe.Pointer(&pos_buffer[0]), gl.STATIC_DRAW)
+	wrapper.BindBuffer(gl.ARRAY_BUFFER, color_vbo)
+	wrapper.BufferData(gl.ARRAY_BUFFER,
+		wrapper.SIZEOF_FLOAT*len(color_buffer), unsafe.Pointer(&color_buffer[0]), gl.STATIC_DRAW)
+
+	wrapper.GenVertexArrays(1, &vao)
+	wrapper.BindVertexArray(vao)
+
+	//Indices
+	wrapper.BindBuffer(gl.ELEMENT_ARRAY_BUFFER, indices_vbo)
+	wrapper.BufferData(gl.ELEMENT_ARRAY_BUFFER,
+		wrapper.SIZEOF_INT*len(indices_buffer), unsafe.Pointer(&indices_buffer[0]), gl.STATIC_DRAW)
+
+	//Position attribute
+	wrapper.BindBuffer(gl.ARRAY_BUFFER, pos_vbo)
+	wrapper.EnableVertexAttribArray(0)
+	wrapper.VertexAttribPointer(0, 2, gl.FLOAT, false, wrapper.SIZEOF_FLOAT*2, nil)
+
+	//Color attribute
+	wrapper.BindBuffer(gl.ARRAY_BUFFER, color_vbo)
+	wrapper.EnableVertexAttribArray(1)
+	wrapper.VertexAttribPointer(1, 4, gl.FLOAT, false, wrapper.SIZEOF_FLOAT*4, nil)
+
+	wrapper.BindBuffer(gl.ARRAY_BUFFER, 0)
+	wrapper.BindVertexArray(0)
+
+	//Draw
+	wrapper.BindVertexArray(vao)
+	wrapper.Enable(gl.BLEND)
+	simple_2d_program.Enable()
+	wrapper.DrawElements(gl.TRIANGLES, int32(len(indices_buffer)), gl.UNSIGNED_INT, nil)
+	simple_2d_program.Disable()
+	wrapper.Disable(gl.BLEND)
+	wrapper.BindVertexArray(0)
+
+	//Delete buffers
+	wrapper.DeleteBuffers(1, &indices_vbo)
+	wrapper.DeleteBuffers(1, &pos_vbo)
+	wrapper.DeleteBuffers(1, &color_vbo)
+	wrapper.DeleteVertexArrays(1, &vao)
+}
+
 func DrawTexture(
 	texture_handle int, x int, y int, width int, height int,
 	bottom_left_u float32, bottom_left_v float32,
