@@ -80,7 +80,7 @@ func updatetestfunc(gw *window.GOGLFWindow) {
 	fields.Camera.Update()
 }
 func drawtestfunc(gw *window.GOGLFWindow) {
-	draw.DrawFilledRectangle2D(5, 5, 400, 400, coloru8.GetColorU8FromFloat32Components(1.0, 0.0, 1.0, 1.0))
+	draw.DrawCircle2D(300, 300, 100, 64, coloru8.GetColorU8FromFloat32Components(0.0, 1.0, 0.0, 1.0))
 }
 func disposetestfunc(gw *window.GOGLFWindow) {
 

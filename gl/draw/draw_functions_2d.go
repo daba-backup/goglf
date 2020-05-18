@@ -1,6 +1,7 @@
 package draw
 
 import (
+	"math"
 	"unsafe"
 
 	"github.com/dabasan/go-dh3dbasis/coloru8"
@@ -275,6 +276,77 @@ func DrawFilledRectangle2D(x1 int, y1 int, x2 int, y2 int, color coloru8.ColorU8
 
 	//Delete buffers
 	wrapper.DeleteBuffers(1, &indices_vbo)
+	wrapper.DeleteBuffers(1, &pos_vbo)
+	wrapper.DeleteBuffers(1, &color_vbo)
+	wrapper.DeleteVertexArrays(1, &vao)
+}
+
+func DrawCircle2D(center_x int, center_y int, radius int, div_num int, color coloru8.ColorU8) {
+	var pos_vbo uint32
+	var color_vbo uint32
+	var vao uint32
+
+	pos_buffer := make([]float32, 2*div_num)
+	color_buffer := make([]float32, 4*div_num)
+
+	count := 0
+	for i := 0; i < div_num; i++ {
+		th := math.Pi * 2.0 / float64(div_num) * float64(i)
+
+		x := float64(radius)*math.Cos(th) + float64(center_x)
+		y := float64(radius)*math.Sin(th) + float64(center_y)
+
+		normalized_x := coordinatetool.NormalizeCoordinate_Float32(float32(x), float32(window_width))
+		normalized_y := coordinatetool.NormalizeCoordinate_Float32(float32(y), float32(window_height))
+
+		pos_buffer[count] = normalized_x
+		pos_buffer[count+1] = normalized_y
+		count += 2
+	}
+
+	for i := 0; i < div_num; i++ {
+		color_buffer[i*4] = color.R
+		color_buffer[i*4+1] = color.G
+		color_buffer[i*4+2] = color.B
+		color_buffer[i*4+3] = color.A
+	}
+
+	wrapper.GenBuffers(1, &pos_vbo)
+	wrapper.GenBuffers(1, &color_vbo)
+
+	wrapper.BindBuffer(gl.ARRAY_BUFFER, pos_vbo)
+	wrapper.BufferData(gl.ARRAY_BUFFER,
+		wrapper.SIZEOF_FLOAT*len(pos_buffer), unsafe.Pointer(&pos_buffer[0]), gl.STATIC_DRAW)
+	wrapper.BindBuffer(gl.ARRAY_BUFFER, color_vbo)
+	wrapper.BufferData(gl.ARRAY_BUFFER,
+		wrapper.SIZEOF_FLOAT*len(color_buffer), unsafe.Pointer(&color_buffer[0]), gl.STATIC_DRAW)
+
+	wrapper.GenVertexArrays(1, &vao)
+	wrapper.BindVertexArray(vao)
+
+	//Position attribute
+	wrapper.BindBuffer(gl.ARRAY_BUFFER, pos_vbo)
+	wrapper.EnableVertexAttribArray(0)
+	wrapper.VertexAttribPointer(0, 2, gl.FLOAT, false, wrapper.SIZEOF_FLOAT*2, nil)
+
+	//Color attribute
+	wrapper.BindBuffer(gl.ARRAY_BUFFER, color_vbo)
+	wrapper.EnableVertexAttribArray(1)
+	wrapper.VertexAttribPointer(1, 4, gl.FLOAT, false, wrapper.SIZEOF_FLOAT*4, nil)
+
+	wrapper.BindBuffer(gl.ARRAY_BUFFER, 0)
+	wrapper.BindVertexArray(0)
+
+	//Draw
+	wrapper.BindVertexArray(vao)
+	wrapper.Enable(gl.BLEND)
+	simple_2d_program.Enable()
+	wrapper.DrawArrays(gl.LINE_LOOP, 0, int32(div_num))
+	simple_2d_program.Disable()
+	wrapper.Disable(gl.BLEND)
+	wrapper.BindVertexArray(0)
+
+	//Delete buffers
 	wrapper.DeleteBuffers(1, &pos_vbo)
 	wrapper.DeleteBuffers(1, &color_vbo)
 	wrapper.DeleteVertexArrays(1, &vao)
