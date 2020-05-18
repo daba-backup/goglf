@@ -1,11 +1,20 @@
 package util
 
 import (
+	"fmt"
+	"image"
+	"image/color"
+	"image/jpeg"
+	"image/png"
 	"log"
+	"os"
+	"unsafe"
 
-	"github.com/dabasan/goglf/gl/texture"
+	"golang.org/x/image/bmp"
+	"golang.org/x/image/tiff"
 
 	"github.com/dabasan/goglf/gl/shader"
+	"github.com/dabasan/goglf/gl/texture"
 	"github.com/dabasan/goglf/gl/transferrer"
 	"github.com/dabasan/goglf/gl/wrapper"
 	"github.com/go-gl/gl/all-core/gl"
@@ -120,4 +129,63 @@ func (s *Screen) BindScreenTexture() {
 }
 func (s *Screen) UnbindScreenTexture() {
 	wrapper.BindTexture(gl.TEXTURE_2D, 0)
+}
+
+//TakeScreenshot takes a screenshot of this screen.
+//You have to specify the format such as "jpg" or "png" by the argument.
+//Currently supported formats are jpg, png, bmp and tiff.
+//Example call: TakeScreenshot("screenshot.png","png")
+func (s *Screen) TakeScreenshot(filename string, format string) error {
+	log.Printf("info: Taking a screenshot. filename=%v format=%v", filename, format)
+
+	width := int(s.screen_width)
+	height := int(s.screen_height)
+
+	data := make([]byte, width*height*4)
+
+	wrapper.BindTexture(gl.TEXTURE_2D, s.texture_id)
+	wrapper.GetTexImage(gl.TEXTURE_2D, 0, gl.RGBA, gl.UNSIGNED_BYTE, unsafe.Pointer(&data[0]))
+	wrapper.BindTexture(gl.TEXTURE_2D, 0)
+
+	img := image.NewRGBA(image.Rect(0, 0, width, height))
+
+	pos := 0
+	for y := height - 1; y >= 0; y-- {
+		for x := 0; x < width; x++ {
+			r := data[pos]
+			g := data[pos+1]
+			b := data[pos+2]
+			a := data[pos+3]
+
+			img.Set(x, y, color.RGBA{R: r, G: g, B: b, A: a})
+
+			pos += 4
+		}
+	}
+
+	var err error
+	file, err := os.Create(filename)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	switch format {
+	case "jpg", "jpeg":
+		err = jpeg.Encode(file, img, nil)
+	case "png":
+		err = png.Encode(file, img)
+	case "bmp":
+		err = bmp.Encode(file, img)
+	case "tiff":
+		err = tiff.Encode(file, img, nil)
+	default:
+		return fmt.Errorf("Unsupported file format. format=%v", format)
+	}
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
