@@ -4,8 +4,6 @@ import (
 	"log"
 	"runtime"
 
-	"github.com/dabasan/go-dh3dbasis/coloru8"
-
 	"github.com/comail/colog"
 	"github.com/dabasan/goglf/gl/draw"
 	"github.com/dabasan/goglf/gl/util"
@@ -80,7 +78,7 @@ func updatetestfunc(gw *window.GOGLFWindow) {
 	fields.Camera.Update()
 }
 func drawtestfunc(gw *window.GOGLFWindow) {
-	draw.DrawFilledCircle2D(300, 300, 100, 64, coloru8.GetColorU8FromFloat32Components(0.0, 1.0, 0.0, 1.0))
+	draw.TransferFullscreenQuad()
 }
 func disposetestfunc(gw *window.GOGLFWindow) {
 

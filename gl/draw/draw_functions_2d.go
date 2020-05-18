@@ -450,6 +450,94 @@ func DrawFilledCircle2D(center_x int, center_y int, radius int, div_num int, col
 	wrapper.DeleteVertexArrays(1, &vao)
 }
 
+func TransferQuad(
+	bottom_left_x float32, bottom_left_y float32,
+	top_right_x float32, top_right_y float32) {
+	indices_buffer := make([]uint32, 6)
+	pos_buffer := make([]float32, 8)
+	uv_buffer := make([]float32, 8)
+
+	indices_buffer[0] = 0
+	indices_buffer[1] = 1
+	indices_buffer[2] = 2
+	indices_buffer[3] = 2
+	indices_buffer[4] = 3
+	indices_buffer[5] = 0
+
+	//Bottom left
+	pos_buffer[0] = bottom_left_x
+	pos_buffer[1] = bottom_left_y
+	uv_buffer[0] = 0.0
+	uv_buffer[1] = 0.0
+	//Bottom right
+	pos_buffer[2] = top_right_x
+	pos_buffer[3] = bottom_left_y
+	uv_buffer[2] = 1.0
+	uv_buffer[3] = 0.0
+	//Top right
+	pos_buffer[4] = top_right_x
+	pos_buffer[5] = top_right_y
+	uv_buffer[4] = 1.0
+	uv_buffer[5] = 1.0
+	//Top left
+	pos_buffer[6] = bottom_left_x
+	pos_buffer[7] = top_right_y
+	uv_buffer[6] = 0.0
+	uv_buffer[7] = 1.0
+
+	var indices_vbo uint32
+	var pos_vbo uint32
+	var uv_vbo uint32
+	var vao uint32
+
+	wrapper.GenBuffers(1, &indices_vbo)
+	wrapper.GenBuffers(1, &pos_vbo)
+	wrapper.GenBuffers(1, &uv_vbo)
+	wrapper.GenVertexArrays(1, &vao)
+
+	wrapper.BindBuffer(gl.ARRAY_BUFFER, pos_vbo)
+	wrapper.BufferData(gl.ARRAY_BUFFER,
+		wrapper.SIZEOF_FLOAT*len(pos_buffer), unsafe.Pointer(&pos_buffer[0]), gl.STATIC_DRAW)
+	wrapper.BindBuffer(gl.ARRAY_BUFFER, uv_vbo)
+	wrapper.BufferData(gl.ARRAY_BUFFER,
+		wrapper.SIZEOF_FLOAT*len(uv_buffer), unsafe.Pointer(&uv_buffer[0]), gl.STATIC_DRAW)
+
+	wrapper.BindVertexArray(vao)
+
+	//Indices
+	wrapper.BindBuffer(gl.ELEMENT_ARRAY_BUFFER, indices_vbo)
+	wrapper.BufferData(gl.ELEMENT_ARRAY_BUFFER,
+		wrapper.SIZEOF_INT*len(indices_buffer), unsafe.Pointer(&indices_buffer[0]), gl.STATIC_DRAW)
+
+	//Position attribute
+	wrapper.BindBuffer(gl.ARRAY_BUFFER, pos_vbo)
+	wrapper.EnableVertexAttribArray(0)
+	wrapper.VertexAttribPointer(0, 2, gl.FLOAT, false, wrapper.SIZEOF_FLOAT*2, nil)
+
+	//UV attribute
+	wrapper.BindBuffer(gl.ARRAY_BUFFER, uv_vbo)
+	wrapper.EnableVertexAttribArray(1)
+	wrapper.VertexAttribPointer(1, 2, gl.FLOAT, false, wrapper.SIZEOF_FLOAT*2, nil)
+
+	wrapper.BindBuffer(gl.ARRAY_BUFFER, 0)
+
+	//Transfer
+	wrapper.Enable(gl.BLEND)
+	wrapper.DrawElements(gl.TRIANGLES, 6, gl.UNSIGNED_INT, nil)
+	wrapper.Disable(gl.BLEND)
+
+	wrapper.BindVertexArray(0)
+
+	//Delete buffers
+	wrapper.DeleteBuffers(1, &indices_vbo)
+	wrapper.DeleteBuffers(1, &pos_vbo)
+	wrapper.DeleteBuffers(1, &uv_vbo)
+	wrapper.DeleteVertexArrays(1, &vao)
+}
+func TransferFullscreenQuad() {
+	TransferQuad(-1.0, -1.0, 1.0, 1.0)
+}
+
 func DrawTexture(
 	texture_handle int, x int, y int, width int, height int,
 	bottom_left_u float32, bottom_left_v float32,
