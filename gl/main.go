@@ -7,7 +7,6 @@ import (
 	"github.com/comail/colog"
 	"github.com/dabasan/goglf/gl/draw"
 	"github.com/dabasan/goglf/gl/model"
-	"github.com/dabasan/goglf/gl/model/assimp"
 	"github.com/dabasan/goglf/gl/util"
 	"github.com/dabasan/goglf/gl/window"
 	"github.com/go-gl/glfw/v3.3/glfw"
@@ -55,9 +54,7 @@ func main() {
 }
 
 func inittestfunc(gw *window.GOGLFWindow) {
-	const SCALE = 1.7 / 20.0
 	model_handle := model.LoadModel("./Data/Model/OBJ/Teapot/teapot.obj", model.FLIP_V_ALL)
-
 	camera := util.NewFreeCamera()
 
 	var fields WindowFields
@@ -65,8 +62,6 @@ func inittestfunc(gw *window.GOGLFWindow) {
 	fields.Camera = camera
 
 	gw.SetUserData(&fields)
-
-	assimp.ShowVersion()
 }
 func updatetestfunc(gw *window.GOGLFWindow) {
 	fields := gw.GetUserData().(*WindowFields)
