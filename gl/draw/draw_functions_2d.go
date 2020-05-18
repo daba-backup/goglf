@@ -352,6 +352,104 @@ func DrawCircle2D(center_x int, center_y int, radius int, div_num int, color col
 	wrapper.DeleteVertexArrays(1, &vao)
 }
 
+func DrawFilledCircle2D(center_x int, center_y int, radius int, div_num int, color coloru8.ColorU8) {
+	var indices_vbo uint32
+	var pos_vbo uint32
+	var color_vbo uint32
+	var vao uint32
+
+	pos_buffer := make([]float32, 2*(div_num+1))
+	color_buffer := make([]float32, 4*(div_num+1))
+
+	normalized_center_x := coordinatetool.NormalizeCoordinate_Float32(float32(center_x), float32(window_width))
+	normalized_center_y := coordinatetool.NormalizeCoordinate_Float32(float32(center_y), float32(window_height))
+
+	count := 0
+	pos_buffer[count] = normalized_center_x
+	pos_buffer[count+1] = normalized_center_y
+	count += 2
+
+	for i := 0; i < div_num; i++ {
+		th := math.Pi * 2.0 / float64(div_num) * float64(i)
+
+		x := float64(radius)*math.Cos(th) + float64(center_x)
+		y := float64(radius)*math.Sin(th) + float64(center_y)
+
+		normalized_x := coordinatetool.NormalizeCoordinate_Float32(float32(x), float32(window_width))
+		normalized_y := coordinatetool.NormalizeCoordinate_Float32(float32(y), float32(window_height))
+
+		pos_buffer[count] = normalized_x
+		pos_buffer[count+1] = normalized_y
+		count += 2
+	}
+
+	for i := 0; i <= div_num; i++ {
+		color_buffer[i*4] = color.R
+		color_buffer[i*4+1] = color.G
+		color_buffer[i*4+2] = color.B
+		color_buffer[i*4+3] = color.A
+	}
+
+	indices_buffer := make([]uint32, 3*div_num)
+	count = 0
+	for i := 1; i < div_num; i++ {
+		indices_buffer[count] = uint32(i)
+		indices_buffer[count+1] = uint32(i + 1)
+		indices_buffer[count+2] = uint32(0)
+		count += 3
+	}
+	indices_buffer[count] = uint32(div_num)
+	indices_buffer[count+1] = uint32(1)
+	indices_buffer[count+2] = uint32(0)
+
+	wrapper.GenBuffers(1, &indices_vbo)
+	wrapper.GenBuffers(1, &pos_vbo)
+	wrapper.GenBuffers(1, &color_vbo)
+
+	wrapper.BindBuffer(gl.ARRAY_BUFFER, pos_vbo)
+	wrapper.BufferData(gl.ARRAY_BUFFER,
+		wrapper.SIZEOF_FLOAT*len(pos_buffer), unsafe.Pointer(&pos_buffer[0]), gl.STATIC_DRAW)
+	wrapper.BindBuffer(gl.ARRAY_BUFFER, color_vbo)
+	wrapper.BufferData(gl.ARRAY_BUFFER,
+		wrapper.SIZEOF_FLOAT*len(color_buffer), unsafe.Pointer(&color_buffer[0]), gl.STATIC_DRAW)
+
+	wrapper.GenVertexArrays(1, &vao)
+	wrapper.BindVertexArray(vao)
+
+	//Indices
+	wrapper.BindBuffer(gl.ELEMENT_ARRAY_BUFFER, indices_vbo)
+	wrapper.BufferData(gl.ELEMENT_ARRAY_BUFFER,
+		wrapper.SIZEOF_INT*len(indices_buffer), unsafe.Pointer(&indices_buffer[0]), gl.STATIC_DRAW)
+
+	//Position attribute
+	wrapper.BindBuffer(gl.ARRAY_BUFFER, pos_vbo)
+	wrapper.EnableVertexAttribArray(0)
+	wrapper.VertexAttribPointer(0, 2, gl.FLOAT, false, wrapper.SIZEOF_FLOAT*2, nil)
+
+	//Color attribute
+	wrapper.BindBuffer(gl.ARRAY_BUFFER, color_vbo)
+	wrapper.EnableVertexAttribArray(1)
+	wrapper.VertexAttribPointer(1, 4, gl.FLOAT, false, wrapper.SIZEOF_FLOAT*4, nil)
+
+	wrapper.BindBuffer(gl.ARRAY_BUFFER, 0)
+	wrapper.BindVertexArray(0)
+
+	//Draw
+	wrapper.BindVertexArray(vao)
+	wrapper.Enable(gl.BLEND)
+	simple_2d_program.Enable()
+	wrapper.DrawElements(gl.TRIANGLES, int32(len(indices_buffer)), gl.UNSIGNED_INT, nil)
+	simple_2d_program.Disable()
+	wrapper.Disable(gl.BLEND)
+	wrapper.BindVertexArray(0)
+
+	//Delete buffers
+	wrapper.DeleteBuffers(1, &indices_vbo)
+	wrapper.DeleteBuffers(1, &pos_vbo)
+	wrapper.DeleteBuffers(1, &color_vbo)
+	wrapper.DeleteVertexArrays(1, &vao)
+}
+
 func DrawTexture(
 	texture_handle int, x int, y int, width int, height int,
 	bottom_left_u float32, bottom_left_v float32,
