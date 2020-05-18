@@ -12,7 +12,7 @@ type FullscreenQuadTransferrerWithUV struct {
 	uv_vbo uint32
 }
 
-func NewFullscreenQuadTransferrerWithUV() *FullscreenQuadTransferrerWithUV {
+func NewFullscreenQuadTransferrerWithUV(flip_v_flag bool) *FullscreenQuadTransferrerWithUV {
 	t := new(FullscreenQuadTransferrerWithUV)
 
 	wrapper.GenBuffers(1, &t.indices_vbo)
@@ -46,18 +46,33 @@ func NewFullscreenQuadTransferrerWithUV() *FullscreenQuadTransferrerWithUV {
 	pos_buffer[6] = -1.0
 	pos_buffer[7] = 1.0
 
-	//Bottom left
-	uv_buffer[0] = 0.0
-	uv_buffer[1] = 1.0
-	//Bottom right
-	uv_buffer[2] = 1.0
-	uv_buffer[3] = 1.0
-	//Top right
-	uv_buffer[4] = 1.0
-	uv_buffer[5] = 0.0
-	//Top left
-	uv_buffer[6] = 0.0
-	uv_buffer[7] = 0.0
+	if flip_v_flag == true {
+		//Bottom left
+		uv_buffer[0] = 0.0
+		uv_buffer[1] = 0.0
+		//Bottom right
+		uv_buffer[2] = 1.0
+		uv_buffer[3] = 0.0
+		//Top right
+		uv_buffer[4] = 1.0
+		uv_buffer[5] = 1.0
+		//Top left
+		uv_buffer[6] = 0.0
+		uv_buffer[7] = 1.0
+	} else {
+		//Bottom left
+		uv_buffer[0] = 0.0
+		uv_buffer[1] = 1.0
+		//Bottom right
+		uv_buffer[2] = 1.0
+		uv_buffer[3] = 1.0
+		//Top right
+		uv_buffer[4] = 1.0
+		uv_buffer[5] = 0.0
+		//Top left
+		uv_buffer[6] = 0.0
+		uv_buffer[7] = 0.0
+	}
 
 	wrapper.BindBuffer(gl.ARRAY_BUFFER, t.pos_vbo)
 	wrapper.BufferData(gl.ARRAY_BUFFER,

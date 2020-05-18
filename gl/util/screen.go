@@ -45,7 +45,7 @@ func NewScreen(width int, height int) *Screen {
 	s.setupFramebuffer()
 
 	s.program, _ = shader.NewShaderProgram("texture_drawer")
-	s.transferrer = transferrer.NewFullscreenQuadTransferrerWithUV()
+	s.transferrer = transferrer.NewFullscreenQuadTransferrerWithUV(true)
 
 	s.texture_handle = -1
 
@@ -134,7 +134,7 @@ func (s *Screen) UnbindScreenTexture() {
 //TakeScreenshot takes a screenshot of this screen.
 //You have to specify the format such as "jpg" or "png" by the argument.
 //Currently supported formats are jpg, png, bmp and tiff.
-//Example call: TakeScreenshot("screenshot.png","png")
+//Call example: TakeScreenshot("screenshot.png","png")
 func (s *Screen) TakeScreenshot(filename string, format string) error {
 	log.Printf("info: Taking a screenshot. filename=%v format=%v", filename, format)
 

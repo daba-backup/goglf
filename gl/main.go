@@ -15,6 +15,7 @@ import (
 type WindowFields struct {
 	Model_handle int
 	Camera       *util.FreeCamera
+	Screen       *util.Screen
 }
 
 func init() {
@@ -56,10 +57,12 @@ func main() {
 func inittestfunc(gw *window.GOGLFWindow) {
 	model_handle := model.LoadModel("./Data/Model/OBJ/Teapot/teapot.obj", model.FLIP_V_ALL)
 	camera := util.NewFreeCamera()
+	screen := util.NewScreen(1024, 1024)
 
 	var fields WindowFields
 	fields.Model_handle = model_handle
 	fields.Camera = camera
+	fields.Screen = screen
 
 	gw.SetUserData(&fields)
 }
@@ -86,8 +89,18 @@ func updatetestfunc(gw *window.GOGLFWindow) {
 func drawtestfunc(gw *window.GOGLFWindow) {
 	fields := gw.GetUserData().(*WindowFields)
 
+	fields.Screen.Enable()
+	fields.Screen.Clear()
 	model.DrawModel_Simple(fields.Model_handle)
 	draw.DrawAxes(100.0)
+	fields.Screen.Disable()
+
+	width, height := gw.GetGLFWWinow().GetSize()
+	fields.Screen.DrawRect(0, 0, width, height)
+
+	if gw.GetKeyboardPressingCount(glfw.KeyEnter) == 1 {
+		fields.Screen.TakeScreenshot("screenshot.jpg", "jpg")
+	}
 }
 func disposetestfunc(gw *window.GOGLFWindow) {
 
