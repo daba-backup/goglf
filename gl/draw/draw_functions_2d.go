@@ -450,6 +450,8 @@ func DrawFilledCircle2D(center_x int, center_y int, radius int, div_num int, col
 	wrapper.DeleteVertexArrays(1, &vao)
 }
 
+//TransferQuad transfers a quad with a specified rect.
+//V-coordinate is flipped by default.
 func TransferQuad(
 	bottom_left_x float32, bottom_left_y float32,
 	top_right_x float32, top_right_y float32) {
@@ -534,6 +536,8 @@ func TransferQuad(
 	wrapper.DeleteBuffers(1, &uv_vbo)
 	wrapper.DeleteVertexArrays(1, &vao)
 }
+
+//TransferFullscreenQuad transfers a fullscreen quad.
 func TransferFullscreenQuad() {
 	TransferQuad(-1.0, -1.0, 1.0, 1.0)
 }
