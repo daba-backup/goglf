@@ -4,18 +4,17 @@ import (
 	"log"
 	"runtime"
 
+	"github.com/dabasan/go-dh3dbasis/coloru8"
+
 	"github.com/comail/colog"
 	"github.com/dabasan/goglf/gl/draw"
-	"github.com/dabasan/goglf/gl/model"
 	"github.com/dabasan/goglf/gl/util"
 	"github.com/dabasan/goglf/gl/window"
 	"github.com/go-gl/glfw/v3.3/glfw"
 )
 
 type WindowFields struct {
-	Model_handle int
-	Camera       *util.FreeCamera
-	Screen       *util.Screen
+	Camera *util.FreeCamera
 }
 
 func init() {
@@ -55,14 +54,8 @@ func main() {
 }
 
 func inittestfunc(gw *window.GOGLFWindow) {
-	model_handle := model.LoadModel("./Data/Model/OBJ/Teapot/teapot.obj", model.FLIP_V_ALL)
-	camera := util.NewFreeCamera()
-	screen := util.NewScreen(1024, 1024)
-
 	var fields WindowFields
-	fields.Model_handle = model_handle
-	fields.Camera = camera
-	fields.Screen = screen
+	fields.Camera = util.NewFreeCamera()
 
 	gw.SetUserData(&fields)
 }
@@ -87,20 +80,7 @@ func updatetestfunc(gw *window.GOGLFWindow) {
 	fields.Camera.Update()
 }
 func drawtestfunc(gw *window.GOGLFWindow) {
-	fields := gw.GetUserData().(*WindowFields)
-
-	fields.Screen.Enable()
-	fields.Screen.Clear()
-	model.DrawModel_Simple(fields.Model_handle)
-	draw.DrawAxes(100.0)
-	fields.Screen.Disable()
-
-	width, height := gw.GetGLFWWinow().GetSize()
-	fields.Screen.DrawRect(0, 0, width, height)
-
-	if gw.GetKeyboardPressingCount(glfw.KeyEnter) == 1 {
-		fields.Screen.TakeScreenshot("screenshot.jpg", "jpg")
-	}
+	draw.DrawLine2D(0, 0, 256, 256, coloru8.GetColorU8FromFloat32Components(1.0, 0.0, 1.0, 1.0))
 }
 func disposetestfunc(gw *window.GOGLFWindow) {
 
