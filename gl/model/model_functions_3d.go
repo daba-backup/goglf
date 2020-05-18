@@ -6,10 +6,9 @@ import (
 
 	"github.com/dabasan/go-dh3dbasis/matrix"
 	"github.com/dabasan/go-dh3dbasis/vector"
-
 	"github.com/dabasan/go-dhtool/filename"
-
 	"github.com/dabasan/goglf/gl/model/bd1"
+	"github.com/dabasan/goglf/gl/model/buffer"
 	"github.com/dabasan/goglf/gl/model/obj"
 	"github.com/dabasan/goglf/gl/shader"
 	"github.com/dabasan/goglf/gl/shape"
@@ -91,6 +90,21 @@ func loadOBJ(model_filename string, option FlipVOption) (*ModelMgr, error) {
 
 	model := NewModelMgr(buffered_vertices_list, option)
 	return model, nil
+}
+
+func Associate(buffered_vertices_list []*buffer.BufferedVertices, option FlipVOption) int {
+	if buffered_vertices_list == nil {
+		log.Println("Nil argument where non-nil required.")
+		return -1
+	}
+
+	model := NewModelMgr(buffered_vertices_list, option)
+
+	model_handle := count
+	models_map[model_handle] = model
+	count++
+
+	return model_handle
 }
 
 func CopyModel(model_handle int) int {
