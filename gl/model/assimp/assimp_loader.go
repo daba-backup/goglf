@@ -32,18 +32,24 @@ func LoadModelWithAssimp(model_filename string) ([]*buffer.BufferedVertices, err
 
 	for _, mesh := range meshes {
 		vertex_num := int(mesh.VertexCount)
+		face_num := int(mesh.FaceCount)
+		indices_num := face_num * 3
 
 		buffered_vertices := buffer.NewBufferedVertices()
-		indices_buffer := make([]uint32, vertex_num)
+		indices_buffer := make([]uint32, indices_num)
 		pos_buffer := make([]float32, vertex_num*3)
 		uv_buffer := make([]float32, vertex_num*2)
 		norm_buffer := make([]float32, vertex_num*3)
 
+		for i := 0; i < face_num; i++ {
+			for j := 0; j < 3; j++ {
+				indices_buffer[i*3+j] = mesh.Faces[i][j]
+			}
+		}
+
 		vec_count := 0
 		uv_count := 0
 		for i := 0; i < vertex_num; i++ {
-			indices_buffer[i] = uint32(i)
-
 			pos_buffer[vec_count] = mesh.Vertices[i].X()
 			pos_buffer[vec_count+1] = mesh.Vertices[i].Y()
 			pos_buffer[vec_count+2] = mesh.Vertices[i].Z()
