@@ -2,6 +2,7 @@ package assimp
 
 import (
 	"fmt"
+	"log"
 
 	assimpgo "github.com/dabasan/assimp-go/assimp"
 	"github.com/dabasan/goglf/gl/model/buffer"
@@ -20,6 +21,8 @@ func ShowLegalString() {
 //LoadModelWithAssimp loads a model with Assimp and generates BufferedVertices.
 //This function does not concern textures, so load textures on your own.
 func LoadModelWithAssimp(model_filename string) ([]*buffer.BufferedVertices, error) {
+	log.Printf("info: Start loading a model with Assimp. model_filename=%v", model_filename)
+
 	ret := make([]*buffer.BufferedVertices, 0)
 
 	meshes, err := assimpgo.ParseFile(model_filename)

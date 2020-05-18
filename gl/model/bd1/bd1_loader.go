@@ -1,12 +1,16 @@
 package bd1
 
 import (
+	"log"
+
 	"github.com/dabasan/go-dhtool/filename"
 	"github.com/dabasan/goglf/gl/model/buffer"
 	"github.com/dabasan/goglf/gl/texture"
 )
 
 func LoadBD1(bd1_filename string) ([]*buffer.BufferedVertices, error) {
+	log.Printf("info: Start loading a BD1 file. bd1_filename=%v", bd1_filename)
+
 	ret := make([]*buffer.BufferedVertices, 0)
 
 	reader := newbd1Reader()
